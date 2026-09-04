@@ -73,12 +73,14 @@ const fill = variant === 'gold' ? '#F7A81B' : 'currentColor';
     <path d={teeth} />
     <path d={rim} fill-rule="evenodd" />
     {
+      /* Each spoke runs hub → rim only. Crossing the centre would fill the
+         hub's bore and turn it into a solid blob. */
       spokeAngles.map((a) => (
         <rect
           x={C - SPOKE_W / 2}
           y={C - R_RIM_IN - 1}
           width={SPOKE_W}
-          height={(R_RIM_IN + 1) * 2}
+          height={R_RIM_IN + 1 - R_HUB + 2}
           transform={`rotate(${a} ${C} ${C})`}
         />
       ))
