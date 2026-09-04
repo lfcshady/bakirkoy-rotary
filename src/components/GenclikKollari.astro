@@ -1,0 +1,54 @@
+---
+import Section from './Section.astro';
+
+const kollar = [
+  {
+    ad: 'Rotaract',
+    yas: '18 yaş ve üzeri',
+    ozet:
+      'Genç yetişkinlerin kendi projelerini kurduğu, kendi yönetimini seçtiği kulüp. Rotary kulüpleri sponsorluk yapar, işi gençler yürütür.',
+  },
+  {
+    ad: 'Interact',
+    yas: '12–18 yaş',
+    ozet:
+      'Lise çağındaki öğrenciler için, okul ya da mahalle temelli hizmet kulübü. Toplum hizmeti ve uluslararası anlayış üzerine kurulu.',
+  },
+  {
+    ad: 'Gençlik Değişimi',
+    yas: '15–19 yaş',
+    ozet:
+      'Öğrencilerin bir dönem ya da bir yıl boyunca başka bir ülkede yaşayıp okuduğu, Rotary kulüplerince yürütülen değişim programı.',
+  },
+];
+---
+
+<Section
+  tone="light"
+  eyebrow="Gençlik hizmetleri"
+  baslik="Rotary’nin genç kolları"
+>
+  <p slot="giris" class="mt-6 max-w-[58ch] text-base leading-relaxed text-onpaper-mute">
+    Her Rotary kulübü, kendi bölgesindeki genç kulüplere sponsor olur. Bu, Rotary’nin
+    sürekliliğini sağlayan asıl mekanizmadır.
+  </p>
+
+  <div class="grid gap-px border border-line-dark bg-[rgb(10_23_48/0.14)] md:grid-cols-3">
+    {
+      kollar.map((k, i) => (
+        <article class="bg-paper p-6 md:p-8" data-reveal data-reveal-delay={String(0.05 * i)}>
+          <div class="flex items-baseline justify-between gap-4">
+            <h3 class="display text-3xl text-onpaper">{k.ad}</h3>
+            <span class="stamp text-xs text-royal">{k.yas}</span>
+          </div>
+          <p class="mt-4 text-sm leading-relaxed text-onpaper-mute">{k.ozet}</p>
+        </article>
+      ))
+    }
+  </div>
+
+  <p class="mt-6 text-sm text-onpaper-mute">
+    Bakırköy Rotary’nin sponsor olduğu Rotaract ve Interact kulüpleri kulüpten bilgi
+    geldiğinde burada bağlantılarıyla birlikte listelenecektir.
+  </p>
+</Section>

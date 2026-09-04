@@ -1,0 +1,59 @@
+---
+import CogRule from './CogRule.astro';
+import { whatsappLink, mailtoLink } from '../data/site.ts';
+
+const wa = whatsappLink(
+  'Merhaba, Bakırköy Rotary Kulübü’ne üyelik hakkında bilgi almak istiyorum.',
+);
+const mail = mailtoLink(
+  'Üyelik hakkında bilgi talebi',
+  'Merhaba,\n\nBakırköy Rotary Kulübü’ne üyelik süreci hakkında bilgi almak istiyorum.\n\nAd Soyad:\nMeslek:\nTelefon:\n',
+);
+---
+
+<section class="bg-ink" aria-labelledby="uyelik-cta-baslik">
+  <div class="mx-auto w-full max-w-[80rem] px-5 sm:px-8">
+    <CogRule />
+    <div class="grid gap-10 py-20 md:grid-cols-12 md:items-end md:py-section">
+      <div class="md:col-span-7" data-reveal>
+        <p class="eyebrow text-gold">Üyelik</p>
+        <h2 id="uyelik-cta-baslik" class="display mt-4 text-[clamp(2.25rem,6vw,4.5rem)]">
+          Rotaryen olmak<br />davetle başlar
+        </h2>
+        <p class="mt-6 max-w-[52ch] text-base leading-relaxed text-onink-mute">
+          Rotary üyeliği başvuruyla değil, mevcut bir üyenin önerisiyle yürür. Kulübü
+          tanımak isteyen konuklar toplantılara davet edilir; süreç oradan devam eder.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap gap-3 md:col-span-5 md:justify-end" data-reveal data-reveal-delay="0.08">
+        <a
+          href="/uyelik"
+          class="group inline-flex items-center gap-3 bg-gold px-6 py-3.5 eyebrow text-ink transition-colors hover:bg-onink"
+        >
+          Süreci okuyun
+          <span class="transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
+        </a>
+        {
+          wa ? (
+            <a
+              href={wa}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-3 border border-line-2 px-6 py-3.5 eyebrow text-onink transition-colors hover:border-gold hover:text-gold"
+            >
+              WhatsApp’tan yazın
+            </a>
+          ) : mail ? (
+            <a
+              href={mail}
+              class="inline-flex items-center gap-3 border border-line-2 px-6 py-3.5 eyebrow text-onink transition-colors hover:border-gold hover:text-gold"
+            >
+              E-posta gönderin
+            </a>
+          ) : null
+        }
+      </div>
+    </div>
+  </div>
+</section>

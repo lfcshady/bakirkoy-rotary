@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.bakirkoyrotary.org/sitemap-index.xml

@@ -1,0 +1,36 @@
+---
+/**
+ * The site's signature structural device.
+ *
+ * The Rotary wheel carries 24 cogs. Every section boundary on this site is a
+ * hairline bearing 24 ticks — the rule is not decoration, it is the club's own
+ * geometry used as punctuation. Six of the ticks are longer, matching the
+ * wheel's six spokes.
+ *
+ * This is a motif, NOT the Rotary emblem. The official emblem is an RI asset and
+ * is never redrawn — see TODO(brief) in Wordmark.astro.
+ */
+interface Props {
+  tone?: 'dark' | 'light';
+  class?: string;
+}
+const { tone = 'dark', class: cls = '' } = Astro.props;
+
+const ticks = Array.from({ length: 24 }, (_, i) => ({ i, spoke: i % 4 === 0 }));
+const line = tone === 'dark' ? 'var(--color-line)' : 'var(--color-line-dark)';
+const tick = tone === 'dark' ? 'var(--color-line-2)' : 'rgb(10 23 48 / 0.28)';
+---
+
+<div class={`w-full ${cls}`} aria-hidden="true">
+  <div class="relative h-3" style={`border-top:1px solid ${line}`}>
+    <div class="absolute inset-x-0 top-0 flex justify-between">
+      {
+        ticks.map(({ spoke }) => (
+          <span
+            style={`width:1px;background:${spoke ? 'var(--color-gold)' : tick};height:${spoke ? '10px' : '5px'};opacity:${spoke ? 0.85 : 1}`}
+          />
+        ))
+      }
+    </div>
+  </div>
+</div>

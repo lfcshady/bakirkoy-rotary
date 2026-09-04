@@ -1,0 +1,138 @@
+---
+import Base from '../../layouts/Base.astro';
+import SayfaBasligi from '../../components/SayfaBasligi.astro';
+import Section from '../../components/Section.astro';
+import ProjeKarti from '../../components/ProjeKarti.astro';
+import UyelikCTA from '../../components/UyelikCTA.astro';
+import { projeler } from '../../data/icerik.ts';
+
+const donemler = [...new Set(projeler.map((p) => p.donem))].sort().reverse();
+const odaklar = [...new Set(projeler.map((p) => p.odak))].sort((a, b) => a.localeCompare(b, 'tr'));
+---
+
+<Base
+  title="Projeler"
+  description="Bakırköy Rotary Kulübü’nün dönem dönem yürüttüğü hizmet projeleri. Döneme ve Rotary odak alanına göre filtreleyin."
+>
+  <SayfaBasligi
+    eyebrow="Arşiv"
+    baslik="Projeler"
+    giris="Kulübün çalışmaları, ait oldukları Rotary yılı ve odak alanıyla birlikte arşivlenir. Bir dönemin işi, yıllar sonra da aynı başlıklar altında okunabilir kalır."
+  />
+
+  <Section tone="dark" rule={true}>
+    <div class="flex flex-wrap items-end gap-8" data-reveal>
+      <fieldset class="min-w-0">
+        <legend class="eyebrow text-onink-mute">Dönem</legend>
+        <div class="mt-3 flex flex-wrap gap-2" role="group">
+          <button type="button" class="filtre" data-filtre="donem" data-deger="hepsi" aria-pressed="true">
+            Hepsi
+          </button>
+          {
+            donemler.map((d) => (
+              <button type="button" class="filtre" data-filtre="donem" data-deger={d} aria-pressed="false">
+                {d}
+              </button>
+            ))
+          }
+        </div>
+      </fieldset>
+
+      <fieldset class="min-w-0">
+        <legend class="eyebrow text-onink-mute">Odak alanı</legend>
+        <div class="mt-3 flex flex-wrap gap-2" role="group">
+          <button type="button" class="filtre" data-filtre="odak" data-deger="hepsi" aria-pressed="true">
+            Hepsi
+          </button>
+          {
+            odaklar.map((o) => (
+              <button type="button" class="filtre" data-filtre="odak" data-deger={o} aria-pressed="false">
+                {o}
+              </button>
+            ))
+          }
+        </div>
+      </fieldset>
+    </div>
+
+    <p class="mt-6 text-xs text-onink-mute" data-sonuc-sayisi aria-live="polite">
+      {projeler.length} proje gösteriliyor.
+    </p>
+
+    <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-proje-listesi>
+      {
+        projeler.map((p, i) => (
+          <li
+            data-donem={p.donem}
+            data-odak={p.odak}
+            data-reveal
+            data-reveal-delay={String(0.04 * (i % 3))}
+          >
+            <ProjeKarti proje={p} tone="dark" class="h-full" />
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="mt-8 hidden text-sm text-onink-mute" data-bos>
+      Bu seçimle eşleşen proje yok.
+    </p>
+  </Section>
+
+  <UyelikCTA />
+</Base>
+
+<style>
+  .filtre {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    padding: 0.55rem 0.9rem;
+    border: 1px solid var(--color-line);
+    color: var(--color-onink-mute);
+    transition: color 0.2s, border-color 0.2s, background-color 0.2s;
+  }
+  .filtre:hover {
+    color: var(--color-onink);
+    border-color: var(--color-line-2);
+  }
+  .filtre[aria-pressed='true'] {
+    background: var(--color-gold);
+    border-color: var(--color-gold);
+    color: var(--color-ink);
+  }
+</style>
+
+<script>
+  const secim = { donem: 'hepsi', odak: 'hepsi' };
+  const liste = document.querySelector<HTMLElement>('[data-proje-listesi]');
+  const bos = document.querySelector<HTMLElement>('[data-bos]');
+  const sayac = document.querySelector<HTMLElement>('[data-sonuc-sayisi]');
+
+  function uygula() {
+    if (!liste) return;
+    let gorunen = 0;
+    liste.querySelectorAll<HTMLElement>('li').forEach((li) => {
+      const uyar =
+        (secim.donem === 'hepsi' || li.dataset.donem === secim.donem) &&
+        (secim.odak === 'hepsi' || li.dataset.odak === secim.odak);
+      li.hidden = !uyar;
+      if (uyar) gorunen++;
+    });
+    bos?.classList.toggle('hidden', gorunen > 0);
+    if (sayac) sayac.textContent = `${gorunen} proje gösteriliyor.`;
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('.filtre').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const tur = btn.dataset.filtre as 'donem' | 'odak';
+      secim[tur] = btn.dataset.deger!;
+      document
+        .querySelectorAll<HTMLButtonElement>(`.filtre[data-filtre="${tur}"]`)
+        .forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      uygula();
+    });
+  });
+</script>

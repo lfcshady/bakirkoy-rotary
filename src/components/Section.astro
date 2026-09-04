@@ -1,0 +1,42 @@
+---
+import CogRule from './CogRule.astro';
+
+interface Props {
+  id?: string;
+  eyebrow?: string;
+  baslik?: string;
+  tone?: 'dark' | 'light' | 'royal';
+  rule?: boolean;
+  class?: string;
+}
+const { id, eyebrow, baslik, tone = 'dark', rule = true, class: cls = '' } = Astro.props;
+
+const zemin = {
+  dark: 'bg-ink text-onink',
+  light: 'bg-paper text-onpaper',
+  royal: 'bg-royal text-onink',
+}[tone];
+const ruleTone = tone === 'light' ? 'light' : 'dark';
+const muted = tone === 'light' ? 'text-onpaper-mute' : 'text-onink-mute';
+---
+
+<section id={id} class={`${zemin} ${cls}`}>
+  <div class="mx-auto w-full max-w-[80rem] px-5 sm:px-8">
+    {rule && <CogRule tone={ruleTone} />}
+
+    <div class="py-20 md:py-section">
+      {
+        (eyebrow || baslik) && (
+          <header class="mb-12 md:mb-16" data-reveal>
+            {eyebrow && <p class={`eyebrow ${tone === 'light' ? 'text-royal' : 'text-gold'}`}>{eyebrow}</p>}
+            {baslik && (
+              <h2 class="display mt-4 max-w-[18ch] text-[clamp(2rem,5vw,3.5rem)]">{baslik}</h2>
+            )}
+            <slot name="giris" />
+          </header>
+        )
+      }
+      <slot />
+    </div>
+  </div>
+</section>

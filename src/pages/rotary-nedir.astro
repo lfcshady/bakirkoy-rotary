@@ -1,0 +1,89 @@
+---
+import Base from '../layouts/Base.astro';
+import SayfaBasligi from '../components/SayfaBasligi.astro';
+import Section from '../components/Section.astro';
+import DortSoru from '../components/DortSoru.astro';
+import OdakAlanlari from '../components/OdakAlanlari.astro';
+import GenclikKollari from '../components/GenclikKollari.astro';
+import { kurumTarihi } from '../data/rotary.ts';
+import { site } from '../data/site.ts';
+
+const baglantilar = [
+  { ad: 'Rotary International', href: site.riUrl, aciklama: 'Uluslararası çatı örgüt.' },
+  { ad: 'Rotary Türkiye', href: site.federasyonUrl, aciklama: 'Türkiye’deki üç bölge federasyonunun ortak sayfası.' },
+  { ad: 'UR 2420. Bölge', href: site.bolgeUrl, aciklama: 'Kulübün bağlı olduğu bölge federasyonu.' },
+];
+---
+
+<Base
+  title="Rotary Nedir"
+  description="Rotary nedir, nasıl çalışır: tarihi, Dört Soru Testi, yedi odak alanı, Rotary Vakfı ve gençlik kolları."
+>
+  <SayfaBasligi
+    eyebrow="Kurum"
+    baslik="Rotary nedir"
+    giris="Rotary, 1905’te kurulmuş, dünya genelinde bir milyondan fazla üyesi olan bir hizmet kuruluşudur. Meslek sahibi insanların, bulundukları toplulukta somut iş üretmek için bir araya geldiği kulüplerden oluşur."
+  />
+
+  <Section tone="dark" eyebrow="Tarih" baslik="Yüz yılı aşkın bir çizgi">
+    <ol class="border-t border-line">
+      {
+        kurumTarihi.map((k, i) => (
+          <li
+            class="grid gap-3 border-b border-line py-7 md:grid-cols-12 md:gap-6"
+            data-reveal
+            data-reveal-delay={String(0.04 * i)}
+          >
+            <span class="stamp text-2xl text-gold md:col-span-2">{k.yil}</span>
+            <p class="text-base leading-relaxed text-onink-mute md:col-span-10">{k.olay}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  <DortSoru />
+  <OdakAlanlari tone="light" />
+
+  <Section tone="dark" eyebrow="Rotary Vakfı" baslik="Bağış nasıl işe dönüşür">
+    <div class="grid gap-10 md:grid-cols-12">
+      <div class="prose-tr text-base leading-relaxed text-onink-mute md:col-span-7" data-reveal>
+        <p>
+          Rotary Vakfı 1917’de kuruldu ve bugün kulüplerin projelerini hibelerle destekliyor.
+          Bir kulüp yerel bir ihtiyaç tespit ettiğinde, kendi kaynağını koyar ve vakıf
+          hibesiyle projenin ölçeğini büyütür.
+        </p>
+        <p>
+          Vakfın en bilinen çalışması PolioPlus’tır: 1985’ten bu yana çocuk felcinin
+          yeryüzünden silinmesi için yürütülen aşılama programı. Rotary bu işi ortaklarıyla
+          birlikte, kesintisiz sürdürüyor.
+        </p>
+      </div>
+
+      <ul class="grid gap-px self-start border border-line bg-line md:col-span-5" data-reveal data-reveal-delay="0.08">
+        {
+          baglantilar.map((b) => (
+            <li class="bg-ink p-5">
+              <a
+                href={b.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group flex items-baseline gap-3"
+              >
+                <span class="display text-xl text-onink transition-colors group-hover:text-gold">
+                  {b.ad}
+                </span>
+                <span class="ml-auto text-onink-mute transition-transform group-hover:translate-x-1" aria-hidden="true">
+                  ↗
+                </span>
+              </a>
+              <p class="mt-1.5 text-xs text-onink-mute">{b.aciklama}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </Section>
+
+  <GenclikKollari />
+</Base>

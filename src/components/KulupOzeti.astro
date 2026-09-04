@@ -1,0 +1,59 @@
+---
+import Section from './Section.astro';
+import Gorsel from './Gorsel.astro';
+import { site } from '../data/site.ts';
+---
+
+<Section tone="dark">
+  <div class="grid gap-12 md:grid-cols-12 md:gap-10">
+    <div class="md:col-span-5" data-reveal>
+      <Gorsel ratio="4 / 5" tone="dark" label="Kulüp fotoğrafı bekleniyor" />
+    </div>
+
+    <div class="md:col-span-7 md:pl-4" data-reveal data-reveal-delay="0.08">
+      <p class="eyebrow text-gold">Kulüp</p>
+      <h2 class="display mt-4 max-w-[16ch] text-[clamp(2rem,5vw,3.5rem)]">
+        Bir kulüp, bir mahalle, kalıcı bir iz
+      </h2>
+
+      <div class="prose-tr mt-7 text-base leading-relaxed text-onink-mute">
+        <p>
+          Rotary, 1905’te Chicago’da dört kişinin bir araya gelmesiyle başladı. Adını,
+          toplantıların üyelerin işyerleri arasında sırayla dönmesinden aldı. Bugün dünya
+          genelinde bir milyondan fazla Rotaryen aynı ilkeyle çalışıyor: mesleğini bilen
+          insanların, bildikleri işi kendi topluluklarının yararına kullanması.
+        </p>
+        <p>
+          Bakırköy Rotary Kulübü, Uluslararası Rotary’nin {site.bolge}’ne bağlıdır.
+          Kulüp haftalık olarak toplanır; projelerini Rotary’nin yedi odak alanı altında
+          planlar ve her Rotary yılında yönetimini yeniler.
+        </p>
+      </div>
+
+      <dl class="mt-10 grid gap-px border border-line bg-line sm:grid-cols-3">
+        <div class="bg-ink p-5">
+          <dt class="eyebrow text-onink-mute">Bağlı olduğu bölge</dt>
+          <dd class="display mt-2 text-xl">UR 2420</dd>
+        </div>
+        <div class="bg-ink p-5">
+          <dt class="eyebrow text-onink-mute">Kuruluş</dt>
+          <dd class="mt-2 font-display text-xl uppercase text-onink-mute">
+            {site.kurulusYili ?? 'Kulüpten bekleniyor'}
+          </dd>
+        </div>
+        <div class="bg-ink p-5">
+          <dt class="eyebrow text-onink-mute">Konum</dt>
+          <dd class="display mt-2 text-xl">Bakırköy</dd>
+        </div>
+      </dl>
+
+      <a
+        href="/hakkimizda"
+        class="group mt-8 inline-flex items-center gap-3 eyebrow text-gold"
+      >
+        Kulübü tanıyın
+        <span class="transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</Section>

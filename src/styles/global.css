@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+/* Self-hosted, no network font request. */
+@import "@fontsource/barlow-condensed/500.css";
+@import "@fontsource/barlow-condensed/600.css";
+@import "@fontsource-variable/source-sans-3/index.css";
+@import "@fontsource-variable/source-serif-4/index.css";
+
+@theme {
+  /* --- Ground: deepened Rotary Royal Blue. RI palette, editorial application. --- */
+  --color-ink:        #0A1730;
+  --color-ink-2:      #0F1F3D;
+  --color-ink-3:      #16294C;
+
+  /* --- RI primaries, unaltered --- */
+  --color-royal:      #17458F;
+  --color-azure:      #005DAA;
+  --color-gold:       #F7A81B;
+
+  /* --- Paper: cool off-white, reads as stock under blue --- */
+  --color-paper:      #EEF1F5;
+  --color-paper-2:    #E1E7EF;
+
+  /* --- Type colours --- */
+  --color-onink:      #F2F5F9;
+  --color-onink-mute: #9AAAC4;
+  --color-onpaper:    #0A1730;
+  --color-onpaper-mute: #4A5B79;
+
+  /* --- Hairlines --- */
+  --color-line:       rgb(255 255 255 / 0.13);
+  --color-line-2:     rgb(255 255 255 / 0.22);
+  --color-line-dark:  rgb(10 23 48 / 0.14);
+
+  --font-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-body:    "Source Sans 3 Variable", "Source Sans 3", system-ui, sans-serif;
+  --font-quote:   "Source Serif 4 Variable", "Source Serif 4", Georgia, serif;
+
+  --spacing-section: 7.5rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-onink);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.65;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: var(--color-gold); color: var(--color-ink); }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  h1, h2, h3 { text-wrap: balance; }
+  p { text-wrap: pretty; }
+}
+
+@layer components {
+  /* Rotary's headline register: condensed, caps, tight. */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.005em;
+    line-height: 0.92;
+  }
+  .eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    line-height: 1.4;
+  }
+  /* The term stamp — the site's structural signature. */
+  .stamp {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .prose-tr p { max-width: 68ch; }
+  .prose-tr p + p { margin-top: 1.1em; }
+}
+
+/* --- Motion: everything opts in, and everything opts out. --- */
+[data-reveal] { opacity: 0; }
+.motion-ready [data-reveal] { will-change: transform, opacity; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
+}

@@ -1,0 +1,19 @@
+---
+/**
+ * Visible marker for placeholder club data.
+ *
+ * CLAUDE.md forbids inventing client facts. Where the design needs a record the
+ * club has not supplied, we render a clearly-labelled draft record instead — and
+ * this badge is what makes it impossible to mistake for real content.
+ */
+interface Props { label?: string; class?: string }
+const { label = 'Taslak', class: cls = '' } = Astro.props;
+---
+
+<span
+  class={`inline-flex items-center gap-1.5 border border-gold/45 px-2 py-[3px] eyebrow text-gold ${cls}`}
+  title="Bu kayıt örnektir; kulüpten gerçek bilgi geldiğinde değişecektir."
+>
+  <span class="inline-block size-1 rotate-45 bg-gold"></span>
+  {label}
+</span>

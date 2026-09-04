@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+import SayfaBasligi from '../../components/SayfaBasligi.astro';
+import Section from '../../components/Section.astro';
+import HaberListesi from '../../components/HaberListesi.astro';
+import { haberler } from '../../data/icerik.ts';
+
+const sirali = [...haberler].sort((a, b) => b.tarih.localeCompare(a.tarih));
+---
+
+<Base
+  title="Haberler ve Duyurular"
+  description="Bakırköy Rotary Kulübü’nden etkinlik duyuruları, toplantı haberleri ve dönem gelişmeleri."
+>
+  <SayfaBasligi
+    eyebrow="Kulüpten"
+    baslik="Haberler"
+    giris="Toplantı duyuruları, konuk konuşmacılar, bölge etkinlikleri ve dönem gelişmeleri."
+  />
+
+  <Section tone="dark">
+    <HaberListesi haberler={sirali} tone="dark" />
+  </Section>
+</Base>

@@ -1,0 +1,152 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site.ts';
+import { taslakModu } from '../data/icerik.ts';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Page-specific schema.org node, merged into the graph. */
+  schema?: Record<string, unknown>;
+}
+const { title, description, schema } = Astro.props;
+
+const fullTitle = title === site.name ? title : `${title} — ${site.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+const kurulus: Record<string, unknown> = {
+  '@type': ['NGO', 'Organization'],
+  '@id': new URL('/#kurulus', Astro.site).href,
+  name: site.name,
+  alternateName: site.shortName,
+  url: Astro.site?.href,
+  description:
+    'Uluslararası Rotary UR 2420. Bölge’ye bağlı, Bakırköy’de faaliyet gösteren hizmet kulübü.',
+  areaServed: 'Bakırköy, İstanbul',
+  parentOrganization: { '@type': 'Organization', name: 'Rotary International', url: 'https://www.rotary.org' },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: site.address.locality,
+    addressRegion: site.address.region,
+    addressCountry: 'TR',
+    ...(site.address.street ? { streetAddress: site.address.street } : {}),
+    ...(site.address.postalCode ? { postalCode: site.address.postalCode } : {}),
+  },
+  // Only real, supplied values reach the graph.
+  ...(site.phone ? { telephone: site.phone } : {}),
+  ...(site.email ? { email: site.email } : {}),
+  ...(site.social.some((s) => s.href) ? { sameAs: site.social.filter((s) => s.href).map((s) => s.href) } : {}),
+};
+
+const graph = [kurulus, ...(schema ? [schema] : [])];
+---
+
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0A1730" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="tr_TR" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })}
+    />
+  </head>
+
+  <body class="min-h-dvh">
+    <a
+      href="#icerik"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:bg-gold focus:px-4 focus:py-2 focus:eyebrow focus:text-ink"
+    >
+      İçeriğe geç
+    </a>
+
+    {
+      taslakModu && (
+        <div class="border-b border-gold/30 bg-ink-2">
+          <p class="mx-auto max-w-[80rem] px-5 py-2 text-center text-xs text-onink-mute sm:px-8">
+            <span class="eyebrow mr-2 text-gold">Taslak</span>
+            Bu site içerik taslağıdır. <strong class="font-semibold text-onink">Taslak</strong>{' '}
+            etiketli kayıtlar örnektir; kulübün gerçek bilgileri geldiğinde değiştirilecektir.
+          </p>
+        </div>
+      )
+    }
+
+    <Header />
+
+    <main id="icerik">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <script>
+      // Motion layer. Loaded once, degrades to plain static content if GSAP
+      // fails or the visitor asked for reduced motion.
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
+
+      if (reduced) {
+        targets.forEach((el) => (el.style.opacity = '1'));
+      } else {
+        (async () => {
+          try {
+            const { gsap } = await import('gsap');
+            const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+            gsap.registerPlugin(ScrollTrigger);
+            document.documentElement.classList.add('motion-ready');
+
+            // Section reveals — restrained: 20px rise, no scale, no blur.
+            targets.forEach((el) => {
+              const delay = Number(el.dataset.revealDelay ?? 0);
+              gsap.fromTo(
+                el,
+                { opacity: 0, y: 20 },
+                {
+                  opacity: 1,
+                  y: 0,
+                  duration: 0.6,
+                  delay,
+                  ease: 'power2.out',
+                  scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+                },
+              );
+            });
+
+            // The one ambient move on the site: the cog ring turns with the
+            // page, never on its own. Rotation is the club's own metaphor.
+            const cogs = document.querySelectorAll<SVGElement>('[data-cog]');
+            if (cogs.length) {
+              gsap.to(cogs, {
+                rotation: 90,
+                transformOrigin: '50% 50%',
+                ease: 'none',
+                scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 1.2 },
+              });
+            }
+          } catch {
+            targets.forEach((el) => (el.style.opacity = '1'));
+          }
+        })();
+      }
+    </script>
+  </body>
+</html>

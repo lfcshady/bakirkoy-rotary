@@ -1,0 +1,232 @@
+---
+import Base from '../layouts/Base.astro';
+import SayfaBasligi from '../components/SayfaBasligi.astro';
+import Section from '../components/Section.astro';
+import IletisimKanallari from '../components/IletisimKanallari.astro';
+import { site } from '../data/site.ts';
+
+const adimlar = [
+  {
+    baslik: 'Tanışma',
+    metin:
+      'Kulübü merak eden konuklar toplantıya davet edilir. Amaç sınav değil, karşılıklı tanışmadır.',
+  },
+  {
+    baslik: 'Öneri',
+    metin:
+      'Rotary üyeliği başvuruyla değil, mevcut bir üyenin önerisiyle işler. Öneri kulüp yönetimine iletilir.',
+  },
+  {
+    baslik: 'Meslek sınıfı',
+    metin:
+      'Kulüp, bölgesindeki farklı meslek gruplarını temsil etmeyi gözetir. Aday, mesleğiyle birlikte değerlendirilir.',
+  },
+  {
+    baslik: 'Yönetim kurulu kararı',
+    metin: 'Yönetim kurulu adayı görüşür; kulüp üyelerine duyurulur.',
+  },
+  {
+    baslik: 'Rozet töreni',
+    metin:
+      'Kabul edilen aday, bir toplantıda rozetini takar ve kulübün bir üyesi olur.',
+  },
+];
+
+const beklenenler = [
+  'Haftalık toplantılara düzenli katılım',
+  'En az bir komitede fiilen görev almak',
+  'Kulüp projelerine emek ve meslek bilgisiyle katkı',
+  'Dört Soru Testi’ni bir ölçü olarak benimsemek',
+];
+
+const kanalVar = Boolean(site.email || site.whatsapp);
+---
+
+<Base
+  title="Rotaryen Olmak"
+  description="Bakırköy Rotary Kulübü’ne üyelik: süreç nasıl işler, üyeden ne beklenir, kiminle iletişime geçilir."
+>
+  <SayfaBasligi
+    eyebrow="Üyelik"
+    baslik="Rotaryen olmak"
+    giris="Rotary üyeliği bir başvuru formundan ibaret değildir. Kulüp, bir mesleği temsil eden ve o mesleği topluluğun yararına kullanmaya istekli insanları arar."
+  />
+
+  <Section tone="dark" eyebrow="Süreç" baslik="Beş adımda işleyiş">
+    <ol class="border-t border-line">
+      {
+        adimlar.map((a, i) => (
+          <li
+            class="grid gap-3 border-b border-line py-7 md:grid-cols-12 md:gap-6"
+            data-reveal
+            data-reveal-delay={String(0.04 * i)}
+          >
+            <span class="stamp text-xs text-gold md:col-span-1">0{i + 1}</span>
+            <h3 class="display text-2xl text-onink md:col-span-4">{a.baslik}</h3>
+            <p class="text-sm leading-relaxed text-onink-mute md:col-span-7">{a.metin}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  <Section tone="light" eyebrow="Beklentiler" baslik="Üyeden ne beklenir">
+    <ul class="grid gap-px border border-line-dark bg-[rgb(10_23_48/0.14)] sm:grid-cols-2">
+      {
+        beklenenler.map((b, i) => (
+          <li class="flex gap-4 bg-paper p-6" data-reveal data-reveal-delay={String(0.04 * i)}>
+            <span class="mt-2 inline-block size-1.5 shrink-0 rotate-45 bg-gold" aria-hidden="true" />
+            <p class="text-base leading-relaxed text-onpaper">{b}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section tone="dark" eyebrow="İletişim" baslik="Kulüple konuşun">
+    <div class="grid gap-12 md:grid-cols-12 md:gap-10">
+      <div class="md:col-span-7" data-reveal>
+        <form class="grid gap-5" data-uyelik-form novalidate>
+          <p class="text-sm leading-relaxed text-onink-mute">
+            Aşağıyı doldurun; mesajınız <strong class="text-onink">kendi WhatsApp’ınızda
+            veya e-posta uygulamanızda</strong> hazır olarak açılır. Bu sitede sunucu yoktur,
+            veriniz hiçbir yerde saklanmaz.
+          </p>
+
+          <label class="grid gap-2">
+            <span class="eyebrow text-onink-mute">Ad Soyad</span>
+            <input type="text" name="ad" required class="alan" autocomplete="name" />
+          </label>
+
+          <label class="grid gap-2">
+            <span class="eyebrow text-onink-mute">Mesleğiniz</span>
+            <input type="text" name="meslek" class="alan" autocomplete="organization-title" />
+          </label>
+
+          <label class="grid gap-2">
+            <span class="eyebrow text-onink-mute">Telefon</span>
+            <input type="tel" name="telefon" class="alan" autocomplete="tel" inputmode="tel" />
+          </label>
+
+          <label class="grid gap-2">
+            <span class="eyebrow text-onink-mute">Eklemek istedikleriniz</span>
+            <textarea name="not" rows="4" class="alan"></textarea>
+          </label>
+
+          {
+            kanalVar ? (
+              <div class="flex flex-wrap gap-3">
+                {site.whatsapp && (
+                  <button type="submit" value="whatsapp" name="kanal" class="gonder">
+                    WhatsApp ile gönder
+                  </button>
+                )}
+                {site.email && (
+                  <button type="submit" value="eposta" name="kanal" class="gonder-ikincil">
+                    E-posta ile gönder
+                  </button>
+                )}
+              </div>
+            ) : (
+              <p class="border border-dashed border-line p-5 text-sm text-onink-mute">
+                Kulübün WhatsApp numarası ve e-posta adresi henüz tanımlı değil. Bu bilgiler
+                geldiğinde form doğrudan çalışır hâle gelecek — kod değişikliği gerekmez,
+                yalnızca <code class="text-gold">src/data/site.ts</code> güncellenir.
+              </p>
+            )
+          }
+
+          <p class="text-xs text-onink-mute" data-form-durum role="status" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <div class="md:col-span-5" data-reveal data-reveal-delay="0.08">
+        <IletisimKanallari
+          tone="dark"
+          konu="Üyelik hakkında bilgi talebi"
+          mesaj="Merhaba, Bakırköy Rotary Kulübü’ne üyelik hakkında bilgi almak istiyorum."
+        />
+      </div>
+    </div>
+  </Section>
+</Base>
+
+<style>
+  .alan {
+    background: var(--color-ink-2);
+    border: 1px solid var(--color-line);
+    color: var(--color-onink);
+    padding: 0.7rem 0.9rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    width: 100%;
+  }
+  .alan:hover { border-color: var(--color-line-2); }
+  .gonder,
+  .gonder-ikincil {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    padding: 0.9rem 1.5rem;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .gonder { background: var(--color-gold); color: var(--color-ink); }
+  .gonder:hover { background: var(--color-onink); }
+  .gonder-ikincil {
+    border: 1px solid var(--color-line-2);
+    color: var(--color-onink);
+  }
+  .gonder-ikincil:hover { border-color: var(--color-gold); color: var(--color-gold); }
+</style>
+
+<script>
+  import { site, whatsappLink, mailtoLink } from '../data/site.ts';
+
+  const form = document.querySelector<HTMLFormElement>('[data-uyelik-form]');
+  const durum = document.querySelector<HTMLElement>('[data-form-durum]');
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const submitter = (e as SubmitEvent).submitter as HTMLButtonElement | null;
+    const veri = new FormData(form);
+
+    const ad = String(veri.get('ad') ?? '').trim();
+    if (!ad) {
+      if (durum) durum.textContent = 'Devam etmek için adınızı yazın.';
+      form.querySelector<HTMLInputElement>('[name="ad"]')?.focus();
+      return;
+    }
+
+    const govde = [
+      'Bakırköy Rotary Kulübü — üyelik hakkında bilgi talebi',
+      '',
+      `Ad Soyad: ${ad}`,
+      `Meslek: ${String(veri.get('meslek') ?? '').trim() || '—'}`,
+      `Telefon: ${String(veri.get('telefon') ?? '').trim() || '—'}`,
+      '',
+      String(veri.get('not') ?? '').trim(),
+    ]
+      .join('\n')
+      .trim();
+
+    const hedef =
+      submitter?.value === 'eposta'
+        ? mailtoLink('Üyelik hakkında bilgi talebi', govde)
+        : (whatsappLink(govde) ?? mailtoLink('Üyelik hakkında bilgi talebi', govde));
+
+    if (!hedef) {
+      if (durum)
+        durum.textContent =
+          'Kulübün iletişim kanalları henüz tanımlı değil. Lütfen daha sonra tekrar deneyin.';
+      return;
+    }
+
+    if (durum) durum.textContent = 'Mesajınız uygulamanızda açılıyor…';
+    window.location.href = hedef;
+  });
+
+  // Referenced so the bundler keeps the module even if the club has no channels yet.
+  void site;
+</script>

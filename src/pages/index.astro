@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import ToplantiSeridi from '../components/ToplantiSeridi.astro';
+import KulupOzeti from '../components/KulupOzeti.astro';
+import DortSoru from '../components/DortSoru.astro';
+import OdakAlanlari from '../components/OdakAlanlari.astro';
+import ProjelerSeridi from '../components/ProjelerSeridi.astro';
+import DonemCizelgesi from '../components/DonemCizelgesi.astro';
+import HaberListesi from '../components/HaberListesi.astro';
+import GenclikKollari from '../components/GenclikKollari.astro';
+import UyelikCTA from '../components/UyelikCTA.astro';
+import Section from '../components/Section.astro';
+import { haberler } from '../data/icerik.ts';
+
+const sonHaberler = [...haberler]
+  .sort((a, b) => b.tarih.localeCompare(a.tarih))
+  .slice(0, 3);
+---
+
+<Base
+  title="Bakırköy Rotary Kulübü"
+  description="Bakırköy Rotary Kulübü — Uluslararası Rotary UR 2420. Bölge’ye bağlı hizmet kulübü. Projeler, dönem yönetimi, bülten arşivi ve iletişim."
+>
+  <Hero />
+  <ToplantiSeridi />
+  <KulupOzeti />
+  <DortSoru />
+  <OdakAlanlari tone="light" />
+  <ProjelerSeridi />
+  <DonemCizelgesi />
+
+  {/* No statistics band: the club has supplied no real numbers, and this site does not invent any. */}
+
+  <Section tone="dark" eyebrow="Haberler" baslik="Kulüpten son duyurular">
+    <HaberListesi haberler={sonHaberler} tone="dark" />
+    <a
+      href="/haberler"
+      class="group mt-10 inline-flex items-center gap-3 eyebrow text-gold"
+    >
+      Tüm haberler
+      <span class="transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
+    </a>
+  </Section>
+
+  <GenclikKollari />
+  <UyelikCTA />
+</Base>

@@ -1,0 +1,53 @@
+---
+import Section from './Section.astro';
+import Taslak from './Taslak.astro';
+import { gecmisBaskanlar, donemler } from '../data/icerik.ts';
+
+/**
+ * The rotation, made visible. Every Rotary club renews its leadership on 1 July;
+ * this horizontal roll is the site's structural signature — the same term codes
+ * index the projects and the bulletin archive.
+ */
+const donemListesi = [
+  ...donemler.map((d) => ({ donem: d.kod, ad: d.baskan, taslak: d.taslak, guncel: true })),
+  ...gecmisBaskanlar.map((g) => ({ ...g, guncel: false })),
+];
+---
+
+<Section
+  tone="dark"
+  eyebrow="Dönem çizelgesi"
+  baslik="Rotary’de yönetim her yıl döner"
+>
+  <p slot="giris" class="mt-6 max-w-[58ch] text-base leading-relaxed text-onink-mute">
+    Her Rotary yılı 1 Temmuz’da yeni bir başkanla açılır. Kulübün hafızası bu dönemler
+    üzerinden tutulur: projeler, bültenler ve yönetim kayıtları hep aynı dönem koduna bağlıdır.
+  </p>
+
+  <ol
+    class="flex snap-x gap-px overflow-x-auto border border-line bg-line pb-0 [scrollbar-width:thin]"
+    data-reveal
+  >
+    {
+      donemListesi.map((d) => (
+        <li class="min-w-[13rem] flex-1 shrink-0 snap-start bg-ink p-5">
+          <div class="flex items-center gap-2">
+            <span class:list={['stamp text-lg', d.guncel ? 'text-gold' : 'text-onink']}>
+              {d.donem}
+            </span>
+            {d.guncel && <span class="eyebrow text-gold">Güncel</span>}
+          </div>
+          <p class="mt-3 text-sm text-onink-mute">
+            {d.ad ?? 'Başkan bilgisi bekleniyor'}
+          </p>
+          {d.taslak && <Taslak class="mt-4" />}
+        </li>
+      ))
+    }
+  </ol>
+
+  <p class="mt-4 text-xs text-onink-mute">
+    Yatay kaydırın. Geçmiş dönem başkanlarının tam listesi kulüpten geldiğinde bu çizelge
+    kulübün kuruluşuna kadar uzatılacaktır.
+  </p>
+</Section>

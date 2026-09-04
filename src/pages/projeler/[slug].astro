@@ -1,0 +1,119 @@
+---
+import Base from '../../layouts/Base.astro';
+import Section from '../../components/Section.astro';
+import Gorsel from '../../components/Gorsel.astro';
+import Taslak from '../../components/Taslak.astro';
+import ProjeKarti from '../../components/ProjeKarti.astro';
+import CogRule from '../../components/CogRule.astro';
+import { projeler, tarihTR } from '../../data/icerik.ts';
+import type { Proje } from '../../data/icerik.ts';
+
+export function getStaticPaths() {
+  return projeler.map((proje) => ({ params: { slug: proje.slug }, props: { proje } }));
+}
+
+interface Props { proje: Proje }
+const { proje } = Astro.props;
+
+const digerleri = projeler.filter((p) => p.slug !== proje.slug).slice(0, 3);
+
+const kunye = [
+  { etiket: 'Dönem', deger: proje.donem },
+  { etiket: 'Odak alanı', deger: proje.odak },
+  { etiket: 'Tarih', deger: proje.tarih ? tarihTR(proje.tarih) : null },
+  { etiket: 'Konum', deger: proje.konum },
+  { etiket: 'Ortaklar', deger: proje.ortaklar.length ? proje.ortaklar.join(', ') : null },
+];
+---
+
+<Base
+  title={proje.ad}
+  description={proje.ozet}
+  schema={{
+    '@type': 'Project',
+    name: proje.ad,
+    description: proje.ozet,
+    ...(proje.konum ? { location: proje.konum } : {}),
+  }}
+>
+  <section class="bg-ink">
+    <div class="mx-auto w-full max-w-[80rem] px-5 pb-14 pt-10 sm:px-8 md:pb-20 md:pt-14">
+      <nav aria-label="Konum izi" class="eyebrow text-onink-mute">
+        <a href="/projeler" class="transition-colors hover:text-gold">Projeler</a>
+        <span class="mx-2" aria-hidden="true">/</span>
+        <span class="text-gold">{proje.donem}</span>
+      </nav>
+
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <span class="stamp text-sm text-gold">{proje.odak}</span>
+        {proje.taslak && <Taslak />}
+      </div>
+
+      <h1 class="display mt-5 max-w-[18ch] text-[clamp(2.25rem,6.5vw,5rem)]">{proje.ad}</h1>
+      <p class="mt-7 max-w-[62ch] text-lg leading-relaxed text-onink-mute">{proje.ozet}</p>
+    </div>
+  </section>
+
+  <div class="bg-ink">
+    <div class="mx-auto w-full max-w-[80rem] px-5 sm:px-8">
+      <Gorsel ratio="16 / 9" tone="dark" label="Proje kapak görseli bekleniyor" />
+    </div>
+  </div>
+
+  <Section tone="dark">
+    <div class="grid gap-12 md:grid-cols-12 md:gap-10">
+      <aside class="md:col-span-4" data-reveal>
+        <h2 class="eyebrow text-gold">Künye</h2>
+        <dl class="mt-5 border-t border-line">
+          {
+            kunye.map((k) => (
+              <div class="flex items-baseline justify-between gap-4 border-b border-line py-3.5">
+                <dt class="eyebrow text-onink-mute">{k.etiket}</dt>
+                <dd
+                  class:list={[
+                    'text-right text-sm',
+                    k.deger ? 'text-onink' : 'text-onink-mute',
+                  ]}
+                >
+                  {k.deger ?? 'Bekleniyor'}
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+      </aside>
+
+      <div class="md:col-span-8 md:pl-4" data-reveal data-reveal-delay="0.08">
+        <div class="prose-tr text-base leading-relaxed text-onink-mute">
+          {proje.detay.map((p) => <p>{p}</p>)}
+        </div>
+
+        <div class="mt-10 grid gap-5 sm:grid-cols-2">
+          <Gorsel ratio="4 / 3" tone="dark" label="Galeri görseli bekleniyor" />
+          <Gorsel ratio="4 / 3" tone="dark" label="Galeri görseli bekleniyor" />
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <section class="bg-ink">
+    <div class="mx-auto w-full max-w-[80rem] px-5 sm:px-8">
+      <CogRule />
+      <div class="py-20 md:py-section">
+        <div class="flex flex-wrap items-end gap-6">
+          <h2 class="display text-[clamp(1.75rem,4vw,2.75rem)]">Diğer projeler</h2>
+          <a href="/projeler" class="ml-auto eyebrow text-gold">Tüm arşiv →</a>
+        </div>
+        <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            digerleri.map((p) => (
+              <li data-reveal>
+                <ProjeKarti proje={p} tone="dark" class="h-full" />
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>

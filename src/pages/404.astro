@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+
+const yollar = [
+  { href: '/projeler', label: 'Projeler' },
+  { href: '/hakkimizda', label: 'Kulüp' },
+  { href: '/bulten', label: 'Bülten arşivi' },
+  { href: '/iletisim', label: 'İletişim' },
+];
+---
+
+<Base title="Sayfa bulunamadı" description="Aradığınız sayfa bulunamadı.">
+  <Section tone="dark" rule={false}>
+    <p class="stamp text-sm text-gold">404</p>
+    <h1 class="display mt-5 max-w-[16ch] text-[clamp(2.5rem,7vw,5rem)]">
+      Bu sayfa yerinde değil
+    </h1>
+    <p class="mt-6 max-w-[52ch] text-lg leading-relaxed text-onink-mute">
+      Bağlantı taşınmış ya da hiç var olmamış olabilir. Aşağıdan devam edebilirsiniz.
+    </p>
+
+    <ul class="mt-10 flex flex-wrap gap-3">
+      {
+        yollar.map((y) => (
+          <li>
+            <a
+              href={y.href}
+              class="inline-block border border-line-2 px-5 py-3 eyebrow text-onink transition-colors hover:border-gold hover:text-gold"
+            >
+              {y.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+</Base>

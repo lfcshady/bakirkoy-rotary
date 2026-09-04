@@ -1,0 +1,82 @@
+---
+import Base from '../layouts/Base.astro';
+import SayfaBasligi from '../components/SayfaBasligi.astro';
+import Section from '../components/Section.astro';
+import Taslak from '../components/Taslak.astro';
+import { bultenler, tarihTR } from '../data/icerik.ts';
+
+/** Bulletins are grouped by Rotary year — the club's own filing system. */
+const gruplar = [...new Set(bultenler.map((b) => b.donem))]
+  .sort()
+  .reverse()
+  .map((donem) => ({
+    donem,
+    kayitlar: bultenler
+      .filter((b) => b.donem === donem)
+      .sort((a, b) => b.sayi - a.sayi),
+  }));
+---
+
+<Base
+  title="Bülten Arşivi"
+  description="Bakırköy Rotary Kulübü bültenleri — dönem dönem arşivlenmiş kulüp yayınları."
+>
+  <SayfaBasligi
+    eyebrow="Yayın"
+    baslik="Bülten arşivi"
+    giris="Bülten, bir Rotary kulübünün kendi belleğidir: o hafta ne konuşuldu, hangi proje nereye vardı, kim konuk oldu. Arşiv dönem dönem tutulur."
+  />
+
+  <Section tone="dark">
+    {
+      gruplar.map((g, gi) => (
+        <div class:list={['', gi > 0 && 'mt-16']}>
+          <div class="flex items-center gap-4">
+            <h2 class="display text-3xl text-onink">{g.donem}</h2>
+            <span class="h-px flex-1 bg-line" aria-hidden="true" />
+            <span class="eyebrow text-onink-mute">{g.kayitlar.length} sayı</span>
+          </div>
+
+          <ul class="mt-6 border-t border-line">
+            {g.kayitlar.map((b, i) => (
+              <li
+                class="grid gap-3 border-b border-line py-5 md:grid-cols-12 md:items-baseline md:gap-6"
+                data-reveal
+                data-reveal-delay={String(0.04 * i)}
+              >
+                <span class="stamp text-xs text-gold md:col-span-1">
+                  {String(b.sayi).padStart(2, '0')}
+                </span>
+                <h3 class="display text-xl text-onink md:col-span-5">{b.baslik}</h3>
+                <time datetime={b.tarih} class="text-sm text-onink-mute md:col-span-3">
+                  {tarihTR(b.tarih)}
+                </time>
+                <div class="flex items-center gap-3 md:col-span-3 md:justify-end">
+                  {b.taslak && <Taslak />}
+                  {b.pdf ? (
+                    <a
+                      href={b.pdf}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="eyebrow text-gold underline-offset-4 hover:underline"
+                    >
+                      PDF ↗
+                    </a>
+                  ) : (
+                    <span class="eyebrow text-onink-mute">PDF bekleniyor</span>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+
+    <p class="mt-12 max-w-[62ch] text-sm text-onink-mute">
+      Kulübün geçmiş bültenleri PDF olarak geldiğinde bu arşiv kuruluş dönemine kadar
+      geriye doğru tamamlanacaktır. Dosyalar siteye doğrudan yüklenir; dış bir servise
+      bağımlılık yoktur.
+    </p>
+  </Section>
+</Base>

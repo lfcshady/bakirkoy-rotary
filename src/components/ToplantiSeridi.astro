@@ -1,0 +1,67 @@
+---
+import { site } from '../data/site.ts';
+
+/**
+ * The one piece of practical information every club site must carry: when and
+ * where the club meets. Rendered honestly — a missing value says it is missing.
+ */
+const t = site.toplanti;
+const bekleniyor = 'Kulüpten bekleniyor';
+
+const alanlar = [
+  { etiket: 'Toplantı günü', deger: t.gun },
+  { etiket: 'Saat', deger: t.saat },
+  { etiket: 'Yer', deger: t.yer },
+];
+---
+
+<section class="border-y border-line bg-ink-2" aria-labelledby="toplanti-baslik">
+  <div class="mx-auto w-full max-w-[80rem] px-5 sm:px-8">
+    <div class="grid gap-8 py-10 md:grid-cols-12 md:items-center">
+      <h2 id="toplanti-baslik" class="eyebrow text-gold md:col-span-3">
+        Haftalık toplantı
+      </h2>
+
+      <dl class="grid gap-6 sm:grid-cols-3 md:col-span-6">
+        {
+          alanlar.map((a) => (
+            <div>
+              <dt class="eyebrow text-onink-mute">{a.etiket}</dt>
+              <dd
+                class:list={[
+                  'mt-1.5 font-display text-xl uppercase tracking-wide',
+                  a.deger ? 'text-onink' : 'text-onink-mute',
+                ]}
+              >
+                {a.deger ?? bekleniyor}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="md:col-span-3 md:justify-self-end">
+        {
+          site.maps.url ? (
+            <a
+              href={site.maps.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group inline-flex items-center gap-3 border border-line-2 px-5 py-3 eyebrow text-onink transition-colors hover:border-gold hover:text-gold"
+            >
+              Yol tarifi
+              <span class="transition-transform group-hover:translate-x-1" aria-hidden="true">
+                ↗
+              </span>
+            </a>
+          ) : (
+            <p class="text-xs text-onink-mute">
+              Toplantı adresi ve harita bağlantısı kulüpten geldiğinde buraya tek tıkla
+              bağlanacaktır.
+            </p>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,105 @@
+---
+import Base from '../layouts/Base.astro';
+import SayfaBasligi from '../components/SayfaBasligi.astro';
+import Section from '../components/Section.astro';
+import IletisimKanallari from '../components/IletisimKanallari.astro';
+import Gorsel from '../components/Gorsel.astro';
+import { site } from '../data/site.ts';
+
+const t = site.toplanti;
+const adresSatirlari = [t.yer, t.adres, `${site.address.locality} / ${site.address.region}`].filter(
+  Boolean,
+);
+---
+
+<Base
+  title="İletişim"
+  description="Bakırköy Rotary Kulübü iletişim bilgileri, haftalık toplantı yeri ve saati."
+  schema={{
+    '@type': 'ContactPage',
+    name: 'İletişim — Bakırköy Rotary Kulübü',
+  }}
+>
+  <SayfaBasligi
+    eyebrow="Ulaşın"
+    baslik="İletişim"
+    giris="Kulübü tanımak, bir projeye destek olmak ya da toplantıya konuk olmak için doğrudan yazabilirsiniz."
+  />
+
+  <Section tone="dark">
+    <div class="grid gap-12 md:grid-cols-12 md:gap-10">
+      <div class="md:col-span-7" data-reveal>
+        <h2 class="eyebrow text-gold">Kanallar</h2>
+        <div class="mt-6">
+          <IletisimKanallari tone="dark" />
+        </div>
+
+        <p class="mt-6 text-xs leading-relaxed text-onink-mute">
+          Bu sitede iletişim formu sunucuya gitmez. Her kanal, mesajınızı kendi
+          uygulamanızda hazır olarak açar — kişisel veriniz burada hiçbir yerde saklanmaz.
+        </p>
+      </div>
+
+      <div class="md:col-span-5" data-reveal data-reveal-delay="0.08">
+        <h2 class="eyebrow text-gold">Haftalık toplantı</h2>
+
+        <dl class="mt-6 border-t border-line">
+          <div class="flex items-baseline justify-between gap-4 border-b border-line py-4">
+            <dt class="eyebrow text-onink-mute">Gün</dt>
+            <dd class:list={['display text-xl', t.gun ? 'text-onink' : 'text-onink-mute']}>
+              {t.gun ?? 'Bekleniyor'}
+            </dd>
+          </div>
+          <div class="flex items-baseline justify-between gap-4 border-b border-line py-4">
+            <dt class="eyebrow text-onink-mute">Saat</dt>
+            <dd class:list={['display text-xl', t.saat ? 'text-onink' : 'text-onink-mute']}>
+              {t.saat ?? 'Bekleniyor'}
+            </dd>
+          </div>
+          <div class="border-b border-line py-4">
+            <dt class="eyebrow text-onink-mute">Adres</dt>
+            <dd class="mt-2 text-sm leading-relaxed text-onink">
+              {
+                adresSatirlari.length > 1 ? (
+                  adresSatirlari.map((s) => <span class="block">{s}</span>)
+                ) : (
+                  <span class="text-onink-mute">
+                    Toplantı yeri ve adresi kulüpten geldiğinde buraya yazılacak.
+                  </span>
+                )
+              }
+            </dd>
+          </div>
+        </dl>
+
+        <div class="mt-6">
+          {
+            site.maps.url ? (
+              <a
+                href={site.maps.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group inline-flex items-center gap-3 bg-gold px-6 py-3.5 eyebrow text-ink transition-colors hover:bg-onink"
+              >
+                Haritada aç
+                <span class="transition-transform group-hover:translate-x-1" aria-hidden="true">
+                  ↗
+                </span>
+              </a>
+            ) : (
+              <Gorsel ratio="4 / 3" tone="dark" label="Harita bağlantısı bekleniyor" />
+            )
+          }
+        </div>
+
+        {
+          t.konukKabul && (
+            <p class="mt-6 border-l-2 border-gold pl-4 text-sm leading-relaxed text-onink-mute">
+              Kulüp toplantılarına konuk kabul edilir. Gelmeden önce haber vermeniz yeterli.
+            </p>
+          )
+        }
+      </div>
+    </div>
+  </Section>
+</Base>

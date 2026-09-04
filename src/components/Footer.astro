@@ -1,0 +1,172 @@
+---
+import CogRule from './CogRule.astro';
+import { site, mailtoLink, whatsappLink } from '../data/site.ts';
+import { guncelDonem } from '../data/rotary.ts';
+
+const donem = guncelDonem();
+const yil = new Date().getFullYear();
+const eposta = mailtoLink('Bakırköy Rotary Kulübü — İletişim');
+const wa = whatsappLink('Merhaba, Bakırköy Rotary Kulübü hakkında bilgi almak istiyorum.');
+const sosyal = site.social.filter((s) => s.href);
+
+const sutunlar = [
+  {
+    baslik: 'Kulüp',
+    baglantilar: [
+      { href: '/hakkimizda', label: 'Hakkımızda' },
+      { href: '/yonetim', label: 'Yönetim ve Komiteler' },
+      { href: '/bulten', label: 'Bülten Arşivi' },
+      { href: '/uyelik', label: 'Rotaryen Olmak' },
+    ],
+  },
+  {
+    baslik: 'Çalışmalar',
+    baglantilar: [
+      { href: '/projeler', label: 'Projeler' },
+      { href: '/haberler', label: 'Haberler ve Duyurular' },
+      { href: '/rotary-nedir', label: 'Rotary Nedir' },
+      { href: '/iletisim', label: 'İletişim' },
+    ],
+  },
+];
+---
+
+<footer class="bg-ink text-onink">
+  <div class="mx-auto w-full max-w-[80rem] px-5 sm:px-8">
+    <CogRule />
+
+    <div class="grid gap-12 py-16 md:grid-cols-12">
+      <div class="md:col-span-5">
+        <p class="eyebrow text-gold">Dönem {donem}</p>
+        <p class="display mt-4 text-[clamp(2rem,4.5vw,3rem)]">
+          Bakırköy<br />Rotary Kulübü
+        </p>
+        <p class="mt-5 max-w-sm text-sm leading-relaxed text-onink-mute">
+          Uluslararası Rotary {site.bolge}’ne bağlı bir hizmet kulübü.
+          Meslek sahibi insanların, bulundukları yerde kalıcı iyilik üretmek için bir araya geldiği bir çatı.
+        </p>
+
+        {
+          sosyal.length > 0 ? (
+            <ul class="mt-7 flex flex-wrap gap-2">
+              {sosyal.map((s) => (
+                <li>
+                  <a
+                    href={s.href!}
+                    rel="noopener noreferrer me"
+                    target="_blank"
+                    class="inline-block border border-line px-3 py-1.5 eyebrow text-onink-mute transition-colors hover:border-gold hover:text-gold"
+                  >
+                    {s.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="mt-7 border border-line px-3 py-2 text-xs text-onink-mute">
+              Sosyal medya hesapları kulüpten geldiğinde buraya bağlanacaktır.
+            </p>
+          )
+        }
+      </div>
+
+      {
+        sutunlar.map((s) => (
+          <nav class="md:col-span-2" aria-label={s.baslik}>
+            <p class="eyebrow text-onink-mute">{s.baslik}</p>
+            <ul class="mt-5 space-y-2.5">
+              {s.baglantilar.map((b) => (
+                <li>
+                  <a href={b.href} class="text-sm text-onink transition-colors hover:text-gold">
+                    {b.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))
+      }
+
+      <div class="md:col-span-3">
+        <p class="eyebrow text-onink-mute">İletişim</p>
+        <ul class="mt-5 space-y-3 text-sm">
+          <li>
+            {
+              site.phone ? (
+                <a href={`tel:${site.phone}`} class="text-onink transition-colors hover:text-gold">
+                  {site.phoneDisplay ?? site.phone}
+                </a>
+              ) : (
+                <span class="text-onink-mute">Telefon: kulüpten bekleniyor</span>
+              )
+            }
+          </li>
+          <li>
+            {
+              eposta ? (
+                <a href={eposta} class="text-onink transition-colors hover:text-gold">
+                  {site.email}
+                </a>
+              ) : (
+                <span class="text-onink-mute">E-posta: kulüpten bekleniyor</span>
+              )
+            }
+          </li>
+          <li>
+            {
+              wa ? (
+                <a
+                  href={wa}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-onink transition-colors hover:text-gold"
+                >
+                  WhatsApp
+                </a>
+              ) : (
+                <span class="text-onink-mute">WhatsApp: kulüpten bekleniyor</span>
+              )
+            }
+          </li>
+          <li class="pt-2 text-onink-mute">
+            {site.address.locality}, {site.address.region}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <CogRule />
+
+    <div
+      class="flex flex-col gap-3 py-6 text-xs text-onink-mute sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p>© {yil} {site.name}. Tüm hakları saklıdır.</p>
+      <ul class="flex flex-wrap gap-x-5 gap-y-2">
+        <li>
+          <a
+            href={site.bolgeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="transition-colors hover:text-gold">UR 2420. Bölge</a
+          >
+        </li>
+        <li>
+          <a
+            href={site.federasyonUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="transition-colors hover:text-gold">Rotary Türkiye</a
+          >
+        </li>
+        <li>
+          <a
+            href={site.riUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="transition-colors hover:text-gold">Rotary International</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,121 @@
+---
+import Wordmark from './Wordmark.astro';
+import { guncelDonem } from '../data/rotary.ts';
+
+const donem = guncelDonem();
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const nav = [
+  { href: '/hakkimizda', label: 'Kulüp' },
+  { href: '/rotary-nedir', label: 'Rotary Nedir' },
+  { href: '/yonetim', label: 'Yönetim' },
+  { href: '/projeler', label: 'Projeler' },
+  { href: '/bulten', label: 'Bülten' },
+  { href: '/haberler', label: 'Haberler' },
+  { href: '/iletisim', label: 'İletişim' },
+];
+const isActive = (href: string) => path === href || path.startsWith(href + '/');
+---
+
+<header
+  class="sticky top-0 z-50 border-b border-line bg-ink/92 backdrop-blur-md supports-[backdrop-filter]:bg-ink/80"
+  data-header
+>
+  <div class="mx-auto flex w-full max-w-[80rem] items-center gap-4 px-5 py-3 sm:px-8">
+    <a href="/" class="text-onink transition-colors hover:text-gold">
+      <Wordmark size={32} />
+    </a>
+
+    <nav class="ml-auto hidden lg:block" aria-label="Ana menü">
+      <ul class="flex items-center gap-7">
+        {
+          nav.map((n) => (
+            <li>
+              <a
+                href={n.href}
+                aria-current={isActive(n.href) ? 'page' : undefined}
+                class:list={[
+                  'eyebrow relative py-2 transition-colors',
+                  isActive(n.href) ? 'text-gold' : 'text-onink-mute hover:text-onink',
+                ]}
+              >
+                {n.label}
+                {isActive(n.href) && (
+                  <span class="absolute inset-x-0 -bottom-[13px] h-px bg-gold" aria-hidden="true" />
+                )}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <span
+      class="stamp ml-auto hidden shrink-0 border border-line px-2.5 py-1 text-[0.7rem] text-onink-mute lg:ml-7 lg:block"
+      title="Rotary yılı 1 Temmuz’da başlar"
+    >
+      Dönem {donem}
+    </span>
+
+    <a
+      href="/uyelik"
+      class="hidden shrink-0 bg-gold px-4 py-2 eyebrow text-ink transition-colors hover:bg-onink lg:inline-block"
+    >
+      Rotaryen Ol
+    </a>
+
+    <button
+      type="button"
+      class="ml-auto grid size-10 place-items-center border border-line text-onink lg:hidden"
+      aria-expanded="false"
+      aria-controls="mobil-menu"
+      data-menu-toggle
+    >
+      <span class="sr-only">Menüyü aç</span>
+      <span class="relative block h-3 w-5" aria-hidden="true">
+        <span class="absolute inset-x-0 top-0 h-px bg-current"></span>
+        <span class="absolute inset-x-0 top-1/2 h-px bg-current"></span>
+        <span class="absolute inset-x-0 bottom-0 h-px bg-current"></span>
+      </span>
+    </button>
+  </div>
+
+  <div id="mobil-menu" class="hidden border-t border-line lg:hidden" data-menu-panel>
+    <nav aria-label="Mobil menü">
+      <ul class="mx-auto max-w-[80rem] px-5 py-2 sm:px-8">
+        {
+          nav.map((n) => (
+            <li class="border-b border-line last:border-0">
+              <a
+                href={n.href}
+                aria-current={isActive(n.href) ? 'page' : undefined}
+                class:list={[
+                  'block py-3.5 font-display text-xl uppercase tracking-wide',
+                  isActive(n.href) ? 'text-gold' : 'text-onink',
+                ]}
+              >
+                {n.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="mx-auto max-w-[80rem] px-5 pb-5 sm:px-8">
+        <a href="/uyelik" class="block bg-gold py-3 text-center eyebrow text-ink">
+          Rotaryen Ol
+        </a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const panel = document.querySelector<HTMLElement>('[data-menu-panel]');
+  toggle?.addEventListener('click', () => {
+    const open = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!open));
+    panel?.classList.toggle('hidden', open);
+    toggle.querySelector('.sr-only')!.textContent = open ? 'Menüyü aç' : 'Menüyü kapat';
+  });
+</script>

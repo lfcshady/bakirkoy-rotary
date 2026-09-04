@@ -1,0 +1,54 @@
+---
+import { dortSoruTesti } from '../data/rotary.ts';
+import CogRule from './CogRule.astro';
+
+/**
+ * The Four-Way Test. Twenty-four words, adopted by Rotary in the 1940s and
+ * unchanged since — the most characteristic thing in the club's world, and one
+ * of the few pieces of content on this site that is complete and verified.
+ *
+ * Numbering is used here because the content genuinely is an ordered test.
+ */
+---
+
+<section class="bg-royal text-onink" aria-labelledby="dort-soru-baslik">
+  <div class="mx-auto w-full max-w-[80rem] px-5 sm:px-8">
+    <CogRule />
+    <div class="grid gap-12 py-20 md:grid-cols-12 md:py-section">
+      <div class="md:col-span-4" data-reveal>
+        <p class="eyebrow text-gold">Ölçü</p>
+        <h2 id="dort-soru-baslik" class="display mt-4 text-[clamp(2rem,5vw,3.5rem)]">
+          Dört Soru<br />Testi
+        </h2>
+        <p class="mt-6 max-w-[38ch] text-sm leading-relaxed text-onink/75">
+          Rotaryenler her kararı bu dört soruya tutar. Kulübün yaptığı işin ölçüsü,
+          söylediklerinden önce buradan okunur.
+        </p>
+      </div>
+
+      <div class="md:col-span-8">
+        <p class="font-quote text-lg italic text-onink/80" data-reveal>
+          {dortSoruTesti.giris}
+        </p>
+        <ol class="mt-8 border-t border-line">
+          {
+            dortSoruTesti.sorular.map((soru, i) => (
+              <li
+                class="flex items-baseline gap-5 border-b border-line py-5 sm:gap-8"
+                data-reveal
+                data-reveal-delay={String(0.06 * i)}
+              >
+                <span class="stamp shrink-0 text-sm text-gold" aria-hidden="true">
+                  0{i + 1}
+                </span>
+                <span class="font-quote text-[clamp(1.35rem,3.2vw,2.1rem)] leading-snug">
+                  {soru}
+                </span>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>

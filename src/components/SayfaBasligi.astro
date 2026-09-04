@@ -1,0 +1,25 @@
+---
+import { guncelDonem } from '../data/rotary.ts';
+
+interface Props { eyebrow: string; baslik: string; giris?: string }
+const { eyebrow, baslik, giris } = Astro.props;
+const donem = guncelDonem();
+---
+
+<section class="bg-ink">
+  <div class="mx-auto w-full max-w-[80rem] px-5 pb-14 pt-14 sm:px-8 md:pb-20 md:pt-20">
+    <div class="flex items-center gap-4">
+      <p class="eyebrow text-gold">{eyebrow}</p>
+      <span class="h-px flex-1 bg-line" aria-hidden="true"></span>
+      <span class="stamp text-xs text-onink-mute">Dönem {donem}</span>
+    </div>
+
+    <h1 class="display mt-6 max-w-[16ch] text-[clamp(2.5rem,7vw,5.5rem)]">{baslik}</h1>
+
+    {
+      giris && (
+        <p class="mt-7 max-w-[62ch] text-lg leading-relaxed text-onink-mute">{giris}</p>
+      )
+    }
+  </div>
+</section>

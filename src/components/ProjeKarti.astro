@@ -1,0 +1,46 @@
+---
+import Gorsel from './Gorsel.astro';
+import Taslak from './Taslak.astro';
+import type { Proje } from '../data/icerik.ts';
+
+interface Props { proje: Proje; tone?: 'dark' | 'light'; class?: string }
+const { proje, tone = 'dark', class: cls = '' } = Astro.props;
+
+const border = tone === 'dark' ? 'border-line' : 'border-line-dark';
+const title = tone === 'dark' ? 'text-onink' : 'text-onpaper';
+const muted = tone === 'dark' ? 'text-onink-mute' : 'text-onpaper-mute';
+---
+
+<article class={`group flex h-full flex-col border ${border} ${cls}`}>
+  <a href={`/projeler/${proje.slug}`} class="block focus-visible:outline-offset-0">
+    <div class="overflow-hidden">
+      <div class="transition-transform duration-500 group-hover:scale-[1.03]">
+        <Gorsel ratio="3 / 2" tone={tone} label="Proje görseli bekleniyor" />
+      </div>
+    </div>
+  </a>
+
+  <div class="flex flex-1 flex-col p-5 md:p-6">
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+      <span class="stamp text-xs text-gold">{proje.donem}</span>
+      <span class={`text-xs ${muted}`}>{proje.odak}</span>
+      {proje.taslak && <Taslak class="ml-auto" />}
+    </div>
+
+    <h3 class={`display mt-4 text-2xl ${title}`}>
+      <a href={`/projeler/${proje.slug}`} class="transition-colors hover:text-gold">
+        {proje.ad}
+      </a>
+    </h3>
+
+    <p class={`mt-2.5 text-sm leading-relaxed ${muted}`}>{proje.ozet}</p>
+
+    <div class={`mt-auto flex items-center gap-2 pt-6 eyebrow ${muted}`}>
+      {proje.konum ?? 'Konum bekleniyor'}
+      <span
+        class="ml-auto transition-transform duration-300 group-hover:translate-x-1"
+        aria-hidden="true">→</span
+      >
+    </div>
+  </div>
+</article>
