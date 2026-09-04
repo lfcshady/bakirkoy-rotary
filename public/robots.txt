@@ -1,4 +1,4 @@
+# Taslak sunum — bu site arama motorlarına kapalıdır.
+# Yayına geçerken bu dosya "Allow: /" + sitemap satırı ile değiştirilir.
 User-agent: *
-Allow: /
-
-Sitemap: https://www.bakirkoyrotary.org/sitemap-index.xml
+Disallow: /

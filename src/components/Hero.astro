@@ -1,29 +1,36 @@
 ---
+import RotaryAmblem from './RotaryAmblem.astro';
 import { site } from '../data/site.ts';
 import { guncelDonem } from '../data/rotary.ts';
 
 const donem = guncelDonem();
-const cogs = Array.from({ length: 24 }, (_, i) => (i * 360) / 24);
 ---
 
 <section class="relative overflow-hidden bg-ink">
-  <!-- Ghost cog: the club's geometry, held back to a whisper. -->
-  <svg
-    class="pointer-events-none absolute -right-[18%] top-1/2 hidden w-[62vw] max-w-[820px] -translate-y-1/2 text-onink opacity-[0.055] md:block"
-    viewBox="0 0 100 100"
+  <!--
+    The wheel. It is the club's emblem, so it is allowed to be the loudest thing
+    on the page — it turns slowly on its own and picks up speed as you scroll.
+    Shown at every width; on phones it sits behind the heading, bleeding off the
+    right edge, which reads as intent rather than decoration.
+  -->
+  <div
+    class="pointer-events-none absolute -right-[30%] top-[16%] w-[95vw] max-w-[760px] sm:-right-[22%] sm:top-1/2 sm:w-[70vw] sm:-translate-y-1/2 md:-right-[14%] md:w-[58vw]"
     aria-hidden="true"
-    data-cog
   >
-    <g fill="none" stroke="currentColor" stroke-width="1.1">
-      <circle cx="50" cy="50" r="34"></circle>
-      <circle cx="50" cy="50" r="30"></circle>
-      <circle cx="50" cy="50" r="10"></circle>
-    </g>
-    <g stroke="currentColor" stroke-width="1.1">
-      {cogs.map((deg) => <line x1="50" y1="16" x2="50" y2="10" transform={`rotate(${deg} 50 50)`} />)}
-      {[0, 60, 120].map((deg) => <line x1="50" y1="20" x2="50" y2="80" transform={`rotate(${deg} 50 50)`} />)}
-    </g>
-  </svg>
+    <div class="relative">
+      <div
+        class="absolute inset-[12%] rounded-full opacity-40 blur-3xl"
+        style="background:radial-gradient(circle,rgb(247 168 27 / 0.16),transparent 68%)"
+      >
+      </div>
+      <RotaryAmblem
+        size={760}
+        variant="gold"
+        class="relative w-full opacity-[0.22] sm:opacity-[0.26]"
+        spin={true}
+      />
+    </div>
+  </div>
 
   <div class="relative mx-auto w-full max-w-[80rem] px-5 pb-20 pt-16 sm:px-8 md:pb-28 md:pt-24">
     <p class="eyebrow text-gold" data-reveal>
@@ -61,18 +68,18 @@ const cogs = Array.from({ length: 24 }, (_, i) => (i * 360) / 24);
           </a>
           <a
             href="/uyelik"
-            class="inline-flex items-center gap-3 border border-line-2 px-6 py-3.5 eyebrow text-onink transition-colors hover:border-gold hover:text-gold"
+            class="inline-flex items-center gap-3 border border-line-2 bg-ink/60 px-6 py-3.5 eyebrow text-onink backdrop-blur-sm transition-colors hover:border-gold hover:text-gold"
           >
             Rotaryen olmak
           </a>
         </div>
 
         <dl class="mt-8 grid grid-cols-2 gap-px border border-line bg-line">
-          <div class="bg-ink p-4">
+          <div class="bg-ink/85 p-4 backdrop-blur-sm">
             <dt class="eyebrow text-onink-mute">Dönem</dt>
             <dd class="stamp mt-2 text-2xl text-gold">{donem}</dd>
           </div>
-          <div class="bg-ink p-4">
+          <div class="bg-ink/85 p-4 backdrop-blur-sm">
             <dt class="eyebrow text-onink-mute">Bölge</dt>
             <dd class="stamp mt-2 text-2xl">2420</dd>
           </div>

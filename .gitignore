@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# workspace-only draft log — never part of the client repo
+DEMO.md

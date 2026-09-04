@@ -1,8 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Section from '../../components/Section.astro';
-import Gorsel from '../../components/Gorsel.astro';
-import Taslak from '../../components/Taslak.astro';
+import Foto from '../../components/Foto.astro';
 import ProjeKarti from '../../components/ProjeKarti.astro';
 import CogRule from '../../components/CogRule.astro';
 import { projeler, tarihTR } from '../../data/icerik.ts';
@@ -20,9 +19,9 @@ const digerleri = projeler.filter((p) => p.slug !== proje.slug).slice(0, 3);
 const kunye = [
   { etiket: 'Dönem', deger: proje.donem },
   { etiket: 'Odak alanı', deger: proje.odak },
-  { etiket: 'Tarih', deger: proje.tarih ? tarihTR(proje.tarih) : null },
+  { etiket: 'Tarih', deger: tarihTR(proje.tarih) },
   { etiket: 'Konum', deger: proje.konum },
-  { etiket: 'Ortaklar', deger: proje.ortaklar.length ? proje.ortaklar.join(', ') : null },
+  { etiket: 'Ortaklar', deger: proje.ortaklar.length ? proje.ortaklar.join(', ') : 'Kulüp içi' },
 ];
 ---
 
@@ -33,7 +32,8 @@ const kunye = [
     '@type': 'Project',
     name: proje.ad,
     description: proje.ozet,
-    ...(proje.konum ? { location: proje.konum } : {}),
+    location: proje.konum,
+    startDate: proje.tarih,
   }}
 >
   <section class="bg-ink">
@@ -44,19 +44,23 @@ const kunye = [
         <span class="text-gold">{proje.donem}</span>
       </nav>
 
-      <div class="mt-8 flex flex-wrap items-center gap-3">
-        <span class="stamp text-sm text-gold">{proje.odak}</span>
-        {proje.taslak && <Taslak />}
-      </div>
+      <p class="stamp mt-8 text-sm text-gold">{proje.odak}</p>
 
-      <h1 class="display mt-5 max-w-[18ch] text-[clamp(2.25rem,6.5vw,5rem)]">{proje.ad}</h1>
+      <h1 class="display mt-4 max-w-[18ch] text-[clamp(2.25rem,6.5vw,5rem)]">{proje.ad}</h1>
       <p class="mt-7 max-w-[62ch] text-lg leading-relaxed text-onink-mute">{proje.ozet}</p>
     </div>
   </section>
 
   <div class="bg-ink">
     <div class="mx-auto w-full max-w-[80rem] px-5 sm:px-8">
-      <Gorsel ratio="16 / 9" tone="dark" label="Proje kapak görseli bekleniyor" />
+      <Foto
+        src={proje.kapak}
+        alt={`${proje.ad} — kapak görseli`}
+        ratio="16 / 9"
+        sizes="100vw"
+        widths={[640, 1024, 1440, 1920]}
+        eager={true}
+      />
     </div>
   </div>
 
@@ -68,19 +72,28 @@ const kunye = [
           {
             kunye.map((k) => (
               <div class="flex items-baseline justify-between gap-4 border-b border-line py-3.5">
-                <dt class="eyebrow text-onink-mute">{k.etiket}</dt>
-                <dd
-                  class:list={[
-                    'text-right text-sm',
-                    k.deger ? 'text-onink' : 'text-onink-mute',
-                  ]}
-                >
-                  {k.deger ?? 'Bekleniyor'}
-                </dd>
+                <dt class="eyebrow shrink-0 text-onink-mute">{k.etiket}</dt>
+                <dd class="text-right text-sm text-onink">{k.deger}</dd>
               </div>
             ))
           }
         </dl>
+
+        {
+          proje.etki.length > 0 && (
+            <>
+              <h2 class="mt-12 eyebrow text-gold">Sonuç</h2>
+              <dl class="mt-5 grid gap-px border border-line bg-line">
+                {proje.etki.map((e) => (
+                  <div class="flex items-baseline justify-between gap-4 bg-ink px-4 py-4">
+                    <dt class="text-sm text-onink-mute">{e.etiket}</dt>
+                    <dd class="display text-2xl text-gold">{e.deger}</dd>
+                  </div>
+                ))}
+              </dl>
+            </>
+          )
+        }
       </aside>
 
       <div class="md:col-span-8 md:pl-4" data-reveal data-reveal-delay="0.08">
@@ -88,10 +101,20 @@ const kunye = [
           {proje.detay.map((p) => <p>{p}</p>)}
         </div>
 
-        <div class="mt-10 grid gap-5 sm:grid-cols-2">
-          <Gorsel ratio="4 / 3" tone="dark" label="Galeri görseli bekleniyor" />
-          <Gorsel ratio="4 / 3" tone="dark" label="Galeri görseli bekleniyor" />
-        </div>
+        {
+          proje.galeri.length > 0 && (
+            <div class="mt-10 grid gap-5 sm:grid-cols-2">
+              {proje.galeri.map((g, i) => (
+                <Foto
+                  src={g}
+                  alt={`${proje.ad} — galeri görseli ${i + 1}`}
+                  ratio="4 / 3"
+                  sizes="(max-width: 640px) 100vw, 33vw"
+                />
+              ))}
+            </div>
+          )
+        }
       </div>
     </div>
   </Section>

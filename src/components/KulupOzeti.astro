@@ -1,13 +1,19 @@
 ---
 import Section from './Section.astro';
-import Gorsel from './Gorsel.astro';
+import Foto from './Foto.astro';
 import { site } from '../data/site.ts';
+import { gorseller } from '../data/icerik.ts';
 ---
 
 <Section tone="dark">
   <div class="grid gap-12 md:grid-cols-12 md:gap-10">
     <div class="md:col-span-5" data-reveal>
-      <Gorsel ratio="4 / 5" tone="dark" label="Kulüp fotoğrafı bekleniyor" />
+      <Foto
+        src={gorseller.kulupOzet}
+        alt="Kulüp üyeleri haftalık toplantıda bir araya gelmiş"
+        ratio="4 / 5"
+        sizes="(max-width: 768px) 100vw, 40vw"
+      />
     </div>
 
     <div class="md:col-span-7 md:pl-4" data-reveal data-reveal-delay="0.08">
@@ -25,8 +31,8 @@ import { site } from '../data/site.ts';
         </p>
         <p>
           Bakırköy Rotary Kulübü, Uluslararası Rotary’nin {site.bolge}’ne bağlıdır.
-          Kulüp haftalık olarak toplanır; projelerini Rotary’nin yedi odak alanı altında
-          planlar ve her Rotary yılında yönetimini yeniler.
+          Kulüp her hafta {site.toplanti.gun} akşamı toplanır; projelerini Rotary’nin yedi
+          odak alanı altında planlar ve her Rotary yılında yönetimini yeniler.
         </p>
       </div>
 
@@ -37,9 +43,7 @@ import { site } from '../data/site.ts';
         </div>
         <div class="bg-ink p-5">
           <dt class="eyebrow text-onink-mute">Kuruluş</dt>
-          <dd class="mt-2 font-display text-xl uppercase text-onink-mute">
-            {site.kurulusYili ?? 'Kulüpten bekleniyor'}
-          </dd>
+          <dd class="display mt-2 text-xl">{site.kurulusYili}</dd>
         </div>
         <div class="bg-ink p-5">
           <dt class="eyebrow text-onink-mute">Konum</dt>

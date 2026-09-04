@@ -1,0 +1,94 @@
+---
+/**
+ * The Rotary wheel — the club's own emblem, drawn to the standard geometry:
+ * 24 cogs, 6 spokes, a hub with a keyway. Gold on blue, per RI's palette.
+ *
+ * Geometry is computed rather than hand-drawn so the 24 teeth stay exactly
+ * even — the same 24 that the site's section rules are derived from.
+ */
+interface Props {
+  size?: number;
+  /** 'gold' = RI gold, 'mono' = single colour via currentColor */
+  variant?: 'gold' | 'mono';
+  class?: string;
+  spin?: boolean;
+}
+const { size = 48, variant = 'gold', class: cls = '', spin = false } = Astro.props;
+
+const C = 100; // centre
+const R_TIP = 95; // tooth tip
+const R_ROOT = 82; // tooth root / rim outer edge
+const R_RIM_IN = 71; // rim inner edge
+const R_HUB = 26; // hub outer
+const R_BORE = 12; // hub bore
+const TEETH = 24;
+const SPOKES = 6;
+const SPOKE_W = 8.5;
+
+const rad = (deg: number) => ((deg - 90) * Math.PI) / 180;
+const pt = (r: number, deg: number) =>
+  `${(C + r * Math.cos(rad(deg))).toFixed(3)} ${(C + r * Math.sin(rad(deg))).toFixed(3)}`;
+
+// One tooth per 15°: a trapezoid whose tip is narrower than its root.
+const step = 360 / TEETH;
+const rootHalf = step * 0.30;
+const tipHalf = step * 0.185;
+
+const teeth = Array.from({ length: TEETH }, (_, i) => {
+  const a = i * step;
+  return [
+    `M ${pt(R_ROOT, a - rootHalf)}`,
+    `L ${pt(R_TIP, a - tipHalf)}`,
+    `L ${pt(R_TIP, a + tipHalf)}`,
+    `L ${pt(R_ROOT, a + rootHalf)}`,
+    'Z',
+  ].join(' ');
+}).join(' ');
+
+// Rim: outer circle minus inner circle (evenodd).
+const rim = [
+  `M ${C - R_ROOT} ${C}`,
+  `a ${R_ROOT} ${R_ROOT} 0 1 0 ${R_ROOT * 2} 0`,
+  `a ${R_ROOT} ${R_ROOT} 0 1 0 ${-R_ROOT * 2} 0`,
+  `M ${C - R_RIM_IN} ${C}`,
+  `a ${R_RIM_IN} ${R_RIM_IN} 0 1 0 ${R_RIM_IN * 2} 0`,
+  `a ${R_RIM_IN} ${R_RIM_IN} 0 1 0 ${-R_RIM_IN * 2} 0`,
+].join(' ');
+
+const spokeAngles = Array.from({ length: SPOKES }, (_, i) => (i * 360) / SPOKES);
+
+const fill = variant === 'gold' ? '#F7A81B' : 'currentColor';
+---
+
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 200 200"
+  class={cls}
+  role="img"
+  aria-label="Rotary International amblemi"
+  data-cog={spin ? '' : undefined}
+>
+  <g fill={fill}>
+    <path d={teeth} />
+    <path d={rim} fill-rule="evenodd" />
+    {
+      spokeAngles.map((a) => (
+        <rect
+          x={C - SPOKE_W / 2}
+          y={C - R_RIM_IN - 1}
+          width={SPOKE_W}
+          height={(R_RIM_IN + 1) * 2}
+          transform={`rotate(${a} ${C} ${C})`}
+        />
+      ))
+    }
+    <path
+      d={`M ${C - R_HUB} ${C} a ${R_HUB} ${R_HUB} 0 1 0 ${R_HUB * 2} 0 a ${R_HUB} ${R_HUB} 0 1 0 ${-R_HUB * 2} 0
+          M ${C - R_BORE} ${C} a ${R_BORE} ${R_BORE} 0 1 0 ${R_BORE * 2} 0 a ${R_BORE} ${R_BORE} 0 1 0 ${-R_BORE * 2} 0`}
+      fill-rule="evenodd"
+    />
+    {/* keyway */}
+    <rect x={C - 3.4} y={C - R_HUB - 1} width="6.8" height={R_HUB - R_BORE + 2} />
+  </g>
+</svg>

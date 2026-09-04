@@ -2,7 +2,8 @@
 import Base from '../layouts/Base.astro';
 import SayfaBasligi from '../components/SayfaBasligi.astro';
 import Section from '../components/Section.astro';
-import Gorsel from '../components/Gorsel.astro';
+import Foto from '../components/Foto.astro';
+import { gorseller } from '../data/icerik.ts';
 import DonemCizelgesi from '../components/DonemCizelgesi.astro';
 import UyelikCTA from '../components/UyelikCTA.astro';
 import { site } from '../data/site.ts';
@@ -43,14 +44,12 @@ import { hizmetYollari } from '../data/rotary.ts';
         <dl class="mt-12 grid gap-px border border-line bg-line sm:grid-cols-2" data-reveal>
           <div class="bg-ink p-5">
             <dt class="eyebrow text-onink-mute">Kuruluş yılı</dt>
-            <dd class="mt-2 font-display text-xl uppercase text-onink-mute">
-              {site.kurulusYili ?? 'Kulüpten bekleniyor'}
-            </dd>
+            <dd class="display mt-2 text-xl">{site.kurulusYili}</dd>
           </div>
           <div class="bg-ink p-5">
-            <dt class="eyebrow text-onink-mute">Kulüp numarası</dt>
-            <dd class="mt-2 font-display text-xl uppercase text-onink-mute">
-              {site.kulupNo ?? 'Kulüpten bekleniyor'}
+            <dt class="eyebrow text-onink-mute">Haftalık toplantı</dt>
+            <dd class="display mt-2 text-xl">
+              {site.toplanti.gun} · {site.toplanti.saat}
             </dd>
           </div>
           <div class="bg-ink p-5">
@@ -66,15 +65,13 @@ import { hizmetYollari } from '../data/rotary.ts';
           </div>
           <div class="bg-ink p-5">
             <dt class="eyebrow text-onink-mute">Üye sayısı</dt>
-            <dd class="mt-2 font-display text-xl uppercase text-onink-mute">
-              {site.uyeSayisi ?? 'Kulüpten bekleniyor'}
-            </dd>
+            <dd class="display mt-2 text-xl">{site.uyeSayisi}</dd>
           </div>
         </dl>
       </div>
 
       <div class="md:col-span-5" data-reveal data-reveal-delay="0.08">
-        <Gorsel ratio="3 / 4" tone="dark" label="Kulüp toplantısı fotoğrafı bekleniyor" />
+        <Foto src={gorseller.kulupToplanti} alt="Kulüp üyeleri haftalık toplantıda" ratio="3 / 4" sizes="(max-width: 768px) 100vw, 40vw" />
       </div>
     </div>
   </Section>

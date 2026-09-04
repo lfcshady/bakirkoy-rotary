@@ -1,0 +1,112 @@
+---
+import Base from '../layouts/Base.astro';
+import SayfaBasligi from '../components/SayfaBasligi.astro';
+import Section from '../components/Section.astro';
+import { site } from '../data/site.ts';
+
+/**
+ * The "what changes before launch" page the draft bar links to. Written for the
+ * club to read, not for us: plain Turkish, no jargon, no file paths.
+ */
+const gruplar = [
+  {
+    baslik: 'Kişiler ve fotoğraflar',
+    aciklama:
+      'Sitedeki bütün isimler ve portreler temsilidir. Gerçek kişilere ait değildir ve yayına çıkmadan önce mutlaka değiştirilir.',
+    maddeler: [
+      'Dönem başkanı, başkan mesajı ve dönem teması',
+      'Yönetim kurulu üyelerinin isimleri, meslekleri ve fotoğrafları',
+      'Komite başkanları',
+      'Geçmiş dönem başkanları listesi',
+    ],
+  },
+  {
+    baslik: 'Projeler, haberler ve bültenler',
+    aciklama:
+      'Kulübün gerçek çalışmalarının yerini tutması için örnek kayıtlar yazıldı. Yapı hazır; içerik sizden gelecek.',
+    maddeler: [
+      'Altı proje kaydı: adı, tarihi, konumu, ortakları, anlatımı ve sonuç rakamları',
+      'Üç haber/duyuru metni',
+      'Dört bülten kaydı ve kapakları — bülten PDF’leri henüz yok',
+      'Proje ve haber fotoğraflarının tamamı',
+    ],
+  },
+  {
+    baslik: 'Rakamlar',
+    aciklama:
+      'Ana sayfadaki sayılar ve künyedeki bilgiler temsilidir. Doğru rakamlar kulüp kayıtlarından alınacak.',
+    maddeler: [
+      'Kuruluş yılı, üye sayısı',
+      'Tamamlanan proje sayısı, burslu öğrenci sayısı',
+      'Projelerin sonuç rakamları (katılımcı, kitap, kilogram vb.)',
+    ],
+  },
+  {
+    baslik: 'İletişim bilgileri',
+    aciklama:
+      'Aşağıdaki bilgiler bilinçli olarak sahtedir; kimseye ulaşmaz. Kendi bilgilerinizle değiştirildiğinde tüm bağlantılar ve form kendiliğinden çalışır hâle gelir.',
+    maddeler: [
+      `Telefon: ${site.phoneDisplay}`,
+      `E-posta: ${site.email}`,
+      `Adres: ${site.address.street}, ${site.address.locality}`,
+      'Sosyal medya bağlantıları platformların ana sayfasına gidiyor',
+      'Toplantı günü, saati ve yeri',
+      'Üyelik formu şu an hiçbir yere göndermiyor',
+    ],
+  },
+  {
+    baslik: 'Sizden istediklerimiz',
+    aciklama:
+      'Bunları biz üretemeyiz — kulüp kayıtlarından gelmesi gerekir.',
+    maddeler: [
+      'Kulübün resmî tescil/sicil bilgileri (bunları taslakta bilerek boş bıraktık; uydurulmaz)',
+      'Kulüp logosu veya amblem dosyası varsa aslı',
+      'Kulüp fotoğraf arşivi',
+      'Geçmiş bültenlerin PDF’leri',
+      'Alan adı — site şu an geçici bir adresle çalışıyor',
+    ],
+  },
+];
+---
+
+<Base
+  title="Taslakta değişecek alanlar"
+  description="Bu taslak sunumda temsili olan ve yayına çıkmadan önce değiştirilecek bilgilerin listesi."
+>
+  <SayfaBasligi
+    eyebrow="Taslak sunum"
+    baslik="Değişecek alanlar"
+    giris="Bu site bir sunum taslağıdır. Tasarımı ve çalışan her parçası hazırdır; içeriği ise kulübün kendi bilgileri gelene kadar temsilidir. Aşağıda, yayına çıkmadan önce değişecek her şey yazılı."
+  />
+
+  <Section tone="dark">
+    <div class="grid gap-x-10 gap-y-14 md:grid-cols-2">
+      {
+        gruplar.map((g, i) => (
+          <section data-reveal data-reveal-delay={String(0.05 * i)}>
+            <div class="flex items-baseline gap-4">
+              <span class="stamp text-xs text-gold">0{i + 1}</span>
+              <h2 class="display text-2xl text-onink">{g.baslik}</h2>
+            </div>
+            <p class="mt-3 max-w-[52ch] text-sm leading-relaxed text-onink-mute">
+              {g.aciklama}
+            </p>
+            <ul class="mt-5 border-t border-line">
+              {g.maddeler.map((m) => (
+                <li class="flex gap-3 border-b border-line py-3 text-sm text-onink">
+                  <span class="mt-2 inline-block size-1 shrink-0 rotate-45 bg-gold" aria-hidden="true" />
+                  {m}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+
+    <p class="mt-16 max-w-[62ch] border-l-2 border-gold pl-5 text-sm leading-relaxed text-onink-mute">
+      Bu sayfa yalnızca taslak sürümde görünür. Kulübün bilgileri yerine geçtiğinde hem bu sayfa
+      hem de üstteki taslak şeridi siteden kalkar.
+    </p>
+  </Section>
+</Base>

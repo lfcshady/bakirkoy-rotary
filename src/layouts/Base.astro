@@ -2,8 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { site } from '../data/site.ts';
-import { taslakModu } from '../data/icerik.ts';
+import { site, taslak } from '../data/site.ts';
 
 interface Props {
   title: string;
@@ -51,7 +50,13 @@ const graph = [kurulus, ...(schema ? [schema] : [])];
     <meta name="theme-color" content="#0A1730" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    {
+      taslak ? (
+        <meta name="robots" content="noindex, nofollow" />
+      ) : (
+        <link rel="sitemap" href="/sitemap-index.xml" />
+      )
+    }
 
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
@@ -79,13 +84,30 @@ const graph = [kurulus, ...(schema ? [schema] : [])];
     </a>
 
     {
-      taslakModu && (
-        <div class="border-b border-gold/30 bg-ink-2">
-          <p class="mx-auto max-w-[80rem] px-5 py-2 text-center text-xs text-onink-mute sm:px-8">
-            <span class="eyebrow mr-2 text-gold">Taslak</span>
-            Bu site içerik taslağıdır. <strong class="font-semibold text-onink">Taslak</strong>{' '}
-            etiketli kayıtlar örnektir; kulübün gerçek bilgileri geldiğinde değiştirilecektir.
-          </p>
+      taslak && (
+        <div class="border-b border-gold/25 bg-ink-2" data-taslak-bar>
+          <div
+            class="mx-auto flex max-w-[80rem] items-start gap-x-3 gap-y-1 px-5 py-2 sm:items-center sm:px-8"
+          >
+            <span class="eyebrow shrink-0 pt-[3px] text-gold sm:pt-0">Taslak sunum</span>
+            <p class="min-w-0 flex-1 text-[0.72rem] leading-snug text-onink-mute sm:text-xs">
+              Görseller ve bilgiler temsilidir. Kendi bilgilerinizle değiştirilecektir.{' '}
+              <a
+                href="/taslak"
+                class="whitespace-nowrap border-b border-gold/50 text-gold transition-colors hover:border-gold"
+              >
+                Değişecek alanlar →
+              </a>
+            </p>
+            <button
+              type="button"
+              class="grid size-6 shrink-0 place-items-center text-onink-mute transition-colors hover:text-onink"
+              data-taslak-kapat
+            >
+              <span class="sr-only">Bu bildirimi kapat</span>
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
         </div>
       )
     }
@@ -97,6 +119,22 @@ const graph = [kurulus, ...(schema ? [schema] : [])];
     </main>
 
     <Footer />
+
+    <script>
+      // Draft bar: dismissible for the length of the visit only.
+      const bar = document.querySelector<HTMLElement>('[data-taslak-bar]');
+      if (bar) {
+        try {
+          if (sessionStorage.getItem('taslak-bar') === 'kapali') bar.hidden = true;
+        } catch {}
+        bar.querySelector('[data-taslak-kapat]')?.addEventListener('click', () => {
+          bar.hidden = true;
+          try {
+            sessionStorage.setItem('taslak-bar', 'kapali');
+          } catch {}
+        });
+      }
+    </script>
 
     <script>
       // Motion layer. Loaded once, degrades to plain static content if GSAP
@@ -131,16 +169,38 @@ const graph = [kurulus, ...(schema ? [schema] : [])];
               );
             });
 
-            // The one ambient move on the site: the cog ring turns with the
-            // page, never on its own. Rotation is the club's own metaphor.
+            // The wheel. Rotation is the club's own metaphor, so it is the one
+            // thing on this site allowed to move on its own: a very slow idle
+            // turn, plus extra rotation driven by scroll position on top of it.
             const cogs = document.querySelectorAll<SVGElement>('[data-cog]');
             if (cogs.length) {
-              gsap.to(cogs, {
-                rotation: 90,
-                transformOrigin: '50% 50%',
+              // Two independent angles summed each frame, so neither can
+              // overwrite the other: a constant idle turn, and a scroll offset.
+              const angle = { idle: 0, scroll: 0 };
+
+              gsap.set(cogs, { transformOrigin: '50% 50%' });
+
+              gsap.to(angle, {
+                idle: 360,
+                duration: 100,
                 ease: 'none',
-                scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 1.2 },
+                repeat: -1,
               });
+
+              gsap.to(angle, {
+                scroll: 200,
+                ease: 'none',
+                scrollTrigger: {
+                  trigger: document.body,
+                  start: 'top top',
+                  end: 'bottom bottom',
+                  scrub: 0.8,
+                },
+              });
+
+              gsap.ticker.add(() =>
+                gsap.set(cogs, { rotation: angle.idle + angle.scroll }),
+              );
             }
           } catch {
             targets.forEach((el) => (el.style.opacity = '1'));

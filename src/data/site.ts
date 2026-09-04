@@ -1,68 +1,80 @@
 /**
- * Single source of truth for the club's identity, contact details and links.
- * Footer, contact page, schema.org and every CTA read from here — that is what
- * keeps NAP consistent.
+ * Single source for club identity, contact details and links.
+ * Footer, contact page, membership form and schema.org all read from here.
  *
- * `null` means: the club has not supplied it yet. Components render a visible
- * placeholder for a null value and never invent one.
+ * ⚠️ TASLAK MODE (`_shared/taslak-mode.md`). Contact values below are the
+ * repo's standard placeholders — they belong to no real person or business.
+ * They are replaced wholesale when the club supplies its own.
+ *
+ * Class C fields (kulüp tescil / dernek sicil numbers) are deliberately absent
+ * and are never invented, not even in a demo.
  */
+
+export const taslak = true;
 
 export const site = {
   name: 'Bakırköy Rotary Kulübü',
   shortName: 'Bakırköy Rotary',
-  bolge: 'UR 2420. Bölge',
-  bolgeUrl: 'https://www.rotary2420.org/tr',
-  federasyonUrl: 'https://rotary.org.tr',
-  riUrl: 'https://www.rotary.org/tr',
   sehir: 'Bakırköy, İstanbul',
+  bolge: 'UR 2420. Bölge',
 
-  // TODO(brief): every null below waits on the club.
-  kurulusYili: null as string | null,
-  kulupNo: null as string | null,
-  uyeSayisi: null as number | null,
+  // Class A in taslak mode — plausible, and listed in DEMO.md.
+  kurulusYili: '1987',
+  uyeSayisi: '42',
 
-  phone: null as string | null,
-  phoneDisplay: null as string | null,
-  whatsapp: null as string | null,
-  email: null as string | null,
+  // Class B — standard placeholders, never a reachable number or address.
+  phone: '+905555555555',
+  phoneDisplay: '0555 555 55 55',
+  phoneAlt: '0212 555 55 55',
+  whatsapp: '905555555555',
+  email: 'ornek@ornekfirma.com',
 
   address: {
-    street: null as string | null,
+    street: 'Örnek Mah. Örnek Cad. No: 1',
     locality: 'Bakırköy',
     region: 'İstanbul',
-    postalCode: null as string | null,
+    postalCode: '',
   },
 
+  // District-level pin, not a real business listing.
   maps: {
-    url: null as string | null,
-    lat: null as number | null,
-    lng: null as number | null,
+    url: 'https://www.google.com/maps/place/Bak%C4%B1rk%C3%B6y,+%C4%B0stanbul/@40.9819,28.8672,14z',
+    lat: 40.9819,
+    lng: 28.8672,
   },
 
   toplanti: {
-    gun: null as string | null,
-    saat: null as string | null,
-    yer: null as string | null,
-    adres: null as string | null,
+    gun: 'Perşembe',
+    saat: '20:00',
+    yer: 'Örnek Otel, Bakırköy',
+    adres: 'Örnek Mah. Örnek Cad. No: 1',
     konukKabul: true,
   },
 
+  // Platform home pages — never a real account.
   social: [
-    { label: 'Instagram', href: null as string | null },
-    { label: 'Facebook', href: null as string | null },
-    { label: 'LinkedIn', href: null as string | null },
-  ],
+    { label: 'Instagram', href: 'https://instagram.com' },
+    { label: 'Facebook', href: 'https://facebook.com' },
+    { label: 'LinkedIn', href: 'https://linkedin.com' },
+  ] as Array<{ label: string; href: string | null }>,
+
+  riUrl: 'https://www.rotary.org',
+  federasyonUrl: 'https://rotary.org.tr',
+  bolgeUrl: 'https://www.rotary2420.org/tr',
 } as const;
 
-/** Builds a `wa.me` link with a pre-filled message, or null if there is no number. */
-export function whatsappLink(mesaj: string): string | null {
-  if (!site.whatsapp) return null;
-  return `https://wa.me/${String(site.whatsapp).replace(/\D/g, '')}?text=${encodeURIComponent(mesaj)}`;
+/** `mailto:` with subject and body pre-filled, or null if there is no address. */
+export function mailtoLink(konu?: string, govde?: string): string | null {
+  if (!site.email) return null;
+  const params = new URLSearchParams();
+  if (konu) params.set('subject', konu);
+  if (govde) params.set('body', govde);
+  const qs = params.toString();
+  return `mailto:${site.email}${qs ? `?${qs}` : ''}`;
 }
 
-/** Builds a mailto: with subject and body, or null if there is no address. */
-export function mailtoLink(konu: string, govde = ''): string | null {
-  if (!site.email) return null;
-  const q = new URLSearchParams({ subject: konu, ...(govde ? { body: govde } : {}) });
-  return `mailto:${site.email}?${q.toString()}`;
+/** `wa.me` with the message pre-filled, or null if there is no number. */
+export function whatsappLink(mesaj?: string): string | null {
+  if (!site.whatsapp) return null;
+  return `https://wa.me/${site.whatsapp}${mesaj ? `?text=${encodeURIComponent(mesaj)}` : ''}`;
 }

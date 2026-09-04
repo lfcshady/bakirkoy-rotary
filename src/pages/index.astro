@@ -7,6 +7,7 @@ import DortSoru from '../components/DortSoru.astro';
 import OdakAlanlari from '../components/OdakAlanlari.astro';
 import ProjelerSeridi from '../components/ProjelerSeridi.astro';
 import DonemCizelgesi from '../components/DonemCizelgesi.astro';
+import Sayilar from '../components/Sayilar.astro';
 import HaberListesi from '../components/HaberListesi.astro';
 import GenclikKollari from '../components/GenclikKollari.astro';
 import UyelikCTA from '../components/UyelikCTA.astro';
@@ -28,9 +29,9 @@ const sonHaberler = [...haberler]
   <DortSoru />
   <OdakAlanlari tone="light" />
   <ProjelerSeridi />
+  <Sayilar />
   <DonemCizelgesi />
 
-  {/* No statistics band: the club has supplied no real numbers, and this site does not invent any. */}
 
   <Section tone="dark" eyebrow="Haberler" baslik="Kulüpten son duyurular">
     <HaberListesi haberler={sonHaberler} tone="dark" />

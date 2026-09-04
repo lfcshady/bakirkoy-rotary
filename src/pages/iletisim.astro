@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import SayfaBasligi from '../components/SayfaBasligi.astro';
 import Section from '../components/Section.astro';
 import IletisimKanallari from '../components/IletisimKanallari.astro';
-import Gorsel from '../components/Gorsel.astro';
+
 import { site } from '../data/site.ts';
 
 const t = site.toplanti;
@@ -73,23 +73,15 @@ const adresSatirlari = [t.yer, t.adres, `${site.address.locality} / ${site.addre
         </dl>
 
         <div class="mt-6">
-          {
-            site.maps.url ? (
-              <a
-                href={site.maps.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="group inline-flex items-center gap-3 bg-gold px-6 py-3.5 eyebrow text-ink transition-colors hover:bg-onink"
-              >
-                Haritada aç
-                <span class="transition-transform group-hover:translate-x-1" aria-hidden="true">
-                  ↗
-                </span>
-              </a>
-            ) : (
-              <Gorsel ratio="4 / 3" tone="dark" label="Harita bağlantısı bekleniyor" />
-            )
-          }
+          <a
+            href={site.maps.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group inline-flex items-center gap-3 bg-gold px-6 py-3.5 eyebrow text-ink transition-colors hover:bg-onink"
+          >
+            Haritada aç
+            <span class="transition-transform group-hover:translate-x-1" aria-hidden="true">↗</span>
+          </a>
         </div>
 
         {

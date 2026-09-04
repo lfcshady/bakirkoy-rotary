@@ -1,0 +1,33 @@
+---
+import CogRule from './CogRule.astro';
+import { sayilar } from '../data/icerik.ts';
+
+/**
+ * Figures band. In taslak mode these numbers are invented Class A content and
+ * are listed in DEMO.md — the club replaces them with its own record.
+ */
+---
+
+<section class="bg-ink" aria-label="Kulüp rakamları">
+  <div class="mx-auto w-full max-w-[80rem] px-5 sm:px-8">
+    <CogRule />
+    <dl class="grid gap-px border-x border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+      {
+        sayilar.map((s, i) => (
+          <div class="bg-ink px-5 py-10 md:px-7 md:py-14" data-reveal data-reveal-delay={String(0.06 * i)}>
+            <dt class="sr-only">{s.etiket}</dt>
+            <dd>
+              <span class="display block text-[clamp(2.75rem,6vw,4.5rem)] text-gold" data-sayac={s.deger}>
+                {s.deger}
+              </span>
+              <span class="mt-3 block font-display text-xl uppercase tracking-wide text-onink">
+                {s.etiket}
+              </span>
+              <span class="mt-1.5 block text-sm text-onink-mute">{s.not}</span>
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
